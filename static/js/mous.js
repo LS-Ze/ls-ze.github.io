@@ -26,12 +26,3 @@ jQuery(document).ready(function($) {
         });
     });
 });
-.mouse{
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;;
-        position: fixed;
-        left: -200px;
-        z-index: 1000;
-        pointer-events: none;
-    }

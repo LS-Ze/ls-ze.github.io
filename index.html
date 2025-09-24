@@ -10,7 +10,7 @@
     <meta name="keywords" content="GitHub,GitHub文件加速,GitHub代理" />
     <meta name="theme-color" content="#00C66B" />
 
-    <!-- 外部资源 -->
+    <!-- 外部资源（确保链接有效） -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/css/font_954744_g42joo6uzdr.css" />
     <link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" />
 
@@ -23,7 +23,7 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             min-height: 100vh;
-            padding: 0;
+            padding: 20px;
             background: #f5f5f5 url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAH0lEQVQYV2NkYGD4z4AswK4SAFXuAf8EPQAAAABJRU5ErkJggg==") repeat;
             display: flex;
             flex-direction: column;
@@ -33,7 +33,6 @@
         .container {
             width: 100%;
             max-width: 500px;
-            padding: 20px;
         }
         /* 头部：Logo + Docker代理 */
         .header {
@@ -146,7 +145,7 @@
             transition: transform 0.05s, opacity 0.2s;
             opacity: 0;
         }
-        /* 天气插件 */
+        /* 天气插件（加载失败自动隐藏） */
         #he-plugin-simple {
             z-index: 9997 !important;
             position: fixed !important;
@@ -154,7 +153,7 @@
             right: 10px !important;
             display: none;
         }
-        /* 音乐播放器 */
+        /* 音乐播放器（加载失败自动隐藏） */
         meting-js {
             position: fixed !important;
             bottom: 10px !important;
@@ -168,7 +167,7 @@
     </style>
 </head>
 <body>
-    <!-- 天气插件 -->
+    <!-- 天气插件（确保资源加载） -->
     <div id="he-plugin-simple"></div>
     <script>
         WIDGET = {
@@ -198,7 +197,7 @@
     </script>
     <script src="https://widget.qweather.net/simple/static/js/he-simple-common.js?v=2.0" defer></script>
 
-    <!-- 鼠标跟随 -->
+    <!-- 鼠标跟随（确保图标资源有效） -->
     <img 
         class="mouse" 
         src="https://github.githubassets.com/favicons/favicon.svg" 
@@ -208,7 +207,7 @@
     />
 
     <div class="container">
-        <!-- 头部 -->
+        <!-- 头部：Logo + Docker代理 -->
         <div class="header">
             <div class="logo">
                 <a href="https://github.com/LS-Ze/gh-proxy" target="_blank">
@@ -222,7 +221,7 @@
             <a href="https://docker.lsdns.top/" class="docker-btn" target="_blank">DOCKER代理</a>
         </div>
 
-        <!-- 主内容区 -->
+        <!-- 主内容区：彩色文字 + 表单 -->
         <div class="main">
             <h2 class="title"><div class="jz ys" id="chakhsu"></div></h2>
             <form action="https://github.lsdns.top/" method="get" target="_blank" onsubmit="return toSubmit(event)">
@@ -237,7 +236,7 @@
             </form>
         </div>
 
-        <!-- 示例说明 -->
+        <!-- 示例说明区 -->
         <div class="examples">
             <p>在本页地址栏输入合规链接（参考以下链接）点击下载按钮，GitHub文件链接带不带协议头都可以，支持release、archive以及文件，右键复制出来的链接都是符合标准的，注意，不支持项目文件夹</p>
             <h4>分支源码</h4>
@@ -262,7 +261,7 @@
         </div>
     </div>
 
-    <!-- 音乐播放器 -->
+    <!-- 音乐播放器（确保资源加载） -->
     <meting-js 
         server="netease"
         type="playlist"
@@ -275,7 +274,7 @@
         order="random"
     ></meting-js>
 
-    <!-- 外部JS -->
+    <!-- 外部JS（确保链接有效） -->
     <script src="https://libs.baidu.com/jquery/1.8.3/jquery.min.js"></script>
     <script src="https://fastly.jsdelivr.net/npm/aplayer/dist/APlayer.min.js" defer></script>
     <script src="https://fastly.jsdelivr.net/npm/meting@2.0.1/dist/Meting.min.js" defer></script>

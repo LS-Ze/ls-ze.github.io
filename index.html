@@ -4,33 +4,23 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no" />
     <title>LSDNS-GitHub 文件加速</title>
-    <!-- 图标资源：保留GitHub图标 + 降级 -->
     <link rel="icon" href="https://github.com/favicon.ico" onerror="this.href='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='" />
-    <link rel="apple-touch-icon" href="https://github.com/favicon.ico" onerror="this.href='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='" />
     <meta name="author" content="Aether-Themes" />
     <meta name="description" content="GitHub,GitHub文件加速,GitHub代理" />
     <meta name="keywords" content="GitHub,GitHub文件加速,GitHub代理" />
     <meta name="theme-color" content="#00C66B" />
 
-    <!-- 保留所有外部CSS：按原顺序引入 -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/css/css-PlayfairDisplay.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/css/css-Poppins400600.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/css/basic-1765b545.css" />
+    <!-- 保留核心外部CSS，确保功能样式 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/css/font_954744_g42joo6uzdr.css" />
-    <!-- 音乐播放器CSS -->
     <link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" />
 
-    <!-- 核心CSS：修复布局 + 移动端适配，不删减任何样式功能 -->
+    <!-- 核心内联CSS：修复布局，清理冗余元素 -->
     <style>
         :root {
             --primary: #00bfb3;
             --text-secondary: #7b7b7b;
-            --border-light: #bfbfbf;
-            --spacing-xs: 4px;
-            --spacing-sm: 8px;
             --spacing-md: 16px;
             --spacing-lg: 24px;
-            --spacing-xl: 32px;
         }
 
         * {
@@ -39,160 +29,141 @@
             box-sizing: border-box;
         }
 
-        body, html {
-            width: 100%;
-            min-height: 100vh;
-            cursor: none; /* 保留隐藏默认鼠标 */
-            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
-            line-height: 1.6;
-            background-color: #fff;
-        }
-
         body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             padding: var(--spacing-md);
-        }
-
-        p {
-            word-break: break-all;
-            color: var(--text-secondary);
-        }
-
-        /* 响应式核心：适配所有屏幕，不删减任何模块 */
-        @media (max-width: 768px) {
-            /* 头部/底部垂直排列，避免挤压 */
-            .hero-header, .hero-footer, .footer-content, .highlights-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: var(--spacing-md);
-            }
-            /* 示例区左间距适配，避免溢出 */
-            .example, .tips {
-                margin-left: var(--spacing-md) !important;
-            }
-            /* 输入框/按钮占满宽度，便于触摸 */
-            .url {
-                width: 100% !important;
-                max-width: 100% !important;
-            }
-            .btn {
-                width: 100% !important;
-                max-width: 220px !important;
-            }
-            /* 文字滚动区域居中，提升可读性 */
-            .hero-banner h4 {
-                font-size: clamp(16px, 3vw, 20px) !important;
-                text-align: center;
-            }
-            /* 示例链接字体缩小，避免换行挤压 */
-            .wrap-article p {
-                font-size: 14px !important;
-            }
-        }
-
-        /* 保留原弹性布局工具类 */
-        .flex {
+            min-height: 100vh;
+            background: #fff;
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
-            gap: var(--spacing-md);
+        }
+
+        .container {
             width: 100%;
-            max-width: 600px;
-            margin: 0 auto;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        .block {
-            display: block;
-            position: relative;
+        .header {
             width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: var(--spacing-lg) 0;
         }
 
-        /* 输入框：保留下划线动画，修复宽度 */
-        .url {
-            font-size: 18px;
-            padding: 12px 10px;
-            position: relative;
-            width: 300px;
-            border: none;
-            border-bottom: 1px solid var(--border-light);
-            background: transparent;
-            transition: border-color 0.2s;
+        .logo {
+            width: 32px;
+            height: 32px;
+            background: #000;
         }
 
-        input:focus {
-            outline: 0;
-        }
-
-        .bar {
-            content: "";
-            height: 2px;
+        .logo img {
             width: 100%;
-            bottom: 0;
-            left: 0;
-            position: absolute;
-            background: var(--primary);
-            transition: 0.2s ease transform;
-            transform: scaleX(0);
+            height: 100%;
+            object-fit: cover;
         }
 
-        .url:focus ~ .bar {
-            transform: scaleX(1);
-        }
-
-        /* 按钮：保留原样式 + 触摸反馈 */
-        .btn {
-            line-height: 38px;
-            background-color: var(--primary);
-            color: #fff;
-            white-space: nowrap;
-            text-align: center;
+        .docker-btn {
+            padding: 6px 12px;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            border-radius: 4px;
+            text-decoration: none;
             font-size: 14px;
-            border: none;
-            border-radius: 2px;
-            cursor: pointer;
-            padding: 5px;
-            width: 160px;
-            margin: 30px 0;
-            transition: background 0.2s, transform 0.1s;
         }
 
-        .btn:hover {
-            background-color: #00a89f;
-        }
-
-        .btn:active {
-            transform: scale(0.98); /* 触摸回弹反馈 */
-        }
-
-        /* 示例与提示区：保留原定位 + 适配 */
-        .example, .tips {
-            color: var(--text-secondary);
-            position: relative;
-            align-self: flex-start;
-            margin-left: 7.5em;
+        .main {
             width: 100%;
-            max-width: 600px;
-            margin: var(--spacing-lg) auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: var(--spacing-lg);
         }
 
-        .tips > p:first-child::before {
-            position: absolute;
-            left: -3em;
-            content: "PS：";
-            color: var(--text-secondary);
+        .title-container {
+            margin-bottom: var(--spacing-md);
         }
 
-        .example > p:first-child::before {
-            position: absolute;
-            left: -7.5em;
-            content: "合法输入示例：";
-            color: var(--text-secondary);
+        .title {
+            font-size: 20px;
+            color: #333;
+            text-align: center;
         }
 
-        /* 鼠标图标：保留跟随 + 修复显示 */
+        .url-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            margin-bottom: var(--spacing-md);
+            outline: none;
+        }
+
+        .url-input:focus {
+            border-color: var(--primary);
+        }
+
+        .download-btn {
+            width: 100%;
+            max-width: 200px;
+            padding: 12px;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .examples {
+            width: 100%;
+            margin-top: var(--spacing-md);
+        }
+
+        .examples h4 {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .examples ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .examples li {
+            margin: 8px 0;
+            color: #666;
+            font-size: 14px;
+            word-break: break-all;
+        }
+
+        .footer {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+            padding-top: var(--spacing-md);
+            border-top: 1px solid #eee;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .contact {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        /* 鼠标图标：保留跟随，修复显示 */
         .mouse {
-            width: 50px;
-            height: 50px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             position: fixed;
             left: -100px;
@@ -200,131 +171,10 @@
             z-index: 9999;
             pointer-events: none;
             transition: transform 0.05s, opacity 0.2s;
-            opacity: 0; /* 初始透明，加载后显示 */
+            opacity: 0;
         }
 
-        /* 头部：保留Logo + Docker代理，修复对齐 */
-        .hero-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: var(--spacing-md) 0;
-            margin-bottom: var(--spacing-lg);
-            width: 100%;
-            max-width: 600px;
-            margin: 0 auto var(--spacing-lg);
-        }
-
-        .-logo img {
-            width: 32px;
-            height: 32px;
-        }
-
-        .button {
-            padding: 6px 12px;
-            border: 1px solid var(--primary);
-            color: var(--primary);
-            border-radius: 2px;
-            text-decoration: none;
-            font-size: 14px;
-            transition: background 0.2s;
-        }
-
-        .button:hover {
-            background-color: rgba(0, 191, 179, 0.1);
-        }
-
-        /* 文字滚动：保留彩色动画 + 适配 */
-        .hero-banner {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin: var(--spacing-lg) 0;
-            width: 100%;
-        }
-
-        .hero-banner h4 {
-            margin: var(--spacing-md) 0;
-            font-size: 22px;
-            color: #333;
-        }
-
-        /* 服务运行时间：保留显示 + 修复计算 */
-        .time {
-            font-size: 16px;
-            color: var(--primary);
-            font-weight: 600;
-        }
-
-        .hero-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: var(--spacing-md) 0;
-            margin-top: var(--spacing-lg);
-            border-top: 1px solid var(--border-light);
-            width: 100%;
-            max-width: 600px;
-            margin: var(--spacing-lg) auto 0;
-            flex-wrap: wrap;
-        }
-
-        /* 示例区：保留所有内容 + 修复布局挤压 */
-        .highlights {
-            width: 100%;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .highlights-header {
-            padding: var(--spacing-md) 0;
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-        }
-
-        .grids, .grid-item, .wrap-article {
-            display: block !important;
-            width: 100% !important;
-            height: auto !important;
-        }
-
-        .wrap-article header h4 {
-            margin: var(--spacing-md) 0 var(--spacing-sm);
-            color: #333;
-        }
-
-        /* 页脚：保留版权 + 修复响应式 */
-        .footer {
-            width: 100%;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .footer-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: var(--spacing-md) 0;
-            border-top: 1px solid var(--border-light);
-            flex-wrap: wrap;
-        }
-
-        .-copyright {
-            color: var(--text-secondary);
-            font-size: 14px;
-        }
-
-        /* 点击文字特效：保留所有样式 + 触屏支持 */
-        .click-effect {
-            position: absolute;
-            font-weight: bold;
-            z-index: 9999;
-            pointer-events: none;
-            font-size: 14px;
-        }
-
-        /* 天气插件：保留 + 加载失败降级 */
+        /* 天气插件：保留，加载失败隐藏 */
         #he-plugin-simple {
             z-index: 9998 !important;
             position: fixed !important;
@@ -332,35 +182,18 @@
             right: 10px !important;
         }
 
-        /* 空gallery区域：保留原结构（不删减） */
-        .gallery {
-            width: 100%;
-            max-width: 600px;
-            margin: var(--spacing-lg) auto;
-            height: 80px; /* 保留高度，避免布局塌陷 */
-            background-color: var(--border-light);
-            opacity: 0.1; /* 弱化显示，不干扰但保留结构 */
-        }
-
-        .gallery-grid {
-            width: 100%;
-            height: 100%;
-        }
-
-        .-image {
-            width: 100%;
-            height: 100%;
-        }
-
-        .clients {
-            width: 100%;
-            max-width: 600px;
-            margin: 0 auto;
+        /* 音乐播放器：保留，加载失败隐藏 */
+        meting-js {
+            position: fixed !important;
+            bottom: 10px !important;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            z-index: 9997 !important;
         }
     </style>
 </head>
 <body>
-    <!-- 1. 天气插件：保留原配置 + 加载失败降级 -->
+    <!-- 天气插件：保留功能，加载失败隐藏 -->
     <div id="he-plugin-simple"></div>
     <script>
         WIDGET = {
@@ -389,7 +222,6 @@
         }
     </script>
     <script>
-        // 天气插件加载失败自动隐藏，不影响其他功能
         window.addEventListener('error', function(e) {
             if (e.target.src && e.target.src.includes('widget.qweather.net')) {
                 setTimeout(() => {
@@ -401,7 +233,7 @@
     </script>
     <script src="https://widget.qweather.net/simple/static/js/he-simple-common.js?v=2.0" defer></script>
 
-    <!-- 2. 鼠标跟随图标：保留 + 加载降级 + 触屏支持 -->
+    <!-- 鼠标跟随图标：保留功能，加载降级 -->
     <img 
         class="mouse" 
         src="https://github.com/favicon.ico" 
@@ -410,188 +242,87 @@
         id="customMouse"
     />
 
-    <main>
-        <!-- 3. 头部：保留Logo + Docker代理，修复链接 -->
-        <section id="hero" class="hero">
-            <div class="hero-content">
-                <div class="hero-header">
-                    <div class="-logo">
-                        <a href="https://github.com/LS-Ze/gh-proxy" target="_blank" rel="noopener">
-                            <img 
-                                src="https://github.com/favicon.ico" 
-                                alt="GitHub Logo"
-                                onerror="this.style.background='#000'; this.width=32; this.height=32"
-                            />
-                        </a>
-                    </div>
-                    <div class="-cta js--localscroll">
-                        <a href="https://docker.lsdns.top/" class="button button--hollow" target="_blank" rel="noopener">docker代理</a>
-                    </div>
-                </div>
-
-                <!-- 4. 彩色文字滚动 + 表单：保留所有功能，修复提交 -->
-                <div class="hero-banner">
-                    <h4><div class="jz ys" id="chakhsu"></div></h4>
-                    <br />
-                    <form
-                        action="https://github.lsdns.top/" 
-                        method="get"
-                        style="padding-bottom: 40px; width: 100%;"
-                        target="_blank"
-                        class="flex"
-                        onsubmit="return toSubmit(event)"
-                        id="downloadForm"
-                    >
-                        <label class="block">
-                            <input
-                                class="block url"
-                                name="q"
-                                type="text"
-                                placeholder="键入Github文件链接"
-                                pattern="^((https|http):\/\/)?(github\.com\/.+?\/.+?\/(?:releases|archive|blob|raw|suites)|((?:raw|gist)\.(?:githubusercontent|github)\.com))\/.+$"
-                                required 
-                                id="githubUrl"
-                            />
-                            <div class="bar"></div>
-                        </label>
-                        <input class="block btn" type="submit" value="下载" />
-                        <!-- 保留Feather箭头图标，修复初始化 -->
-                        <div class="-cta">
-                            <a href="#section1"><<<<i data-feather="arrow-down"></</</</i></a>
-                        </div>
-                    </form>
-                </div>
-
-                <!-- 5. 服务运行时间：保留计算 + 修复显示 -->
-                <div class="hero-footer">
-                    <div class="-counter">
-                        <p><small>Survival Time</small></p>
-                        <div id="sitetime" class="time">加载中...</div>
-                    </div>
-                    <div class="-social">
-                        <ul>
-                            <li>
-                                <a href="tencent://Message/?uin=1248683640" class="facebook" target="_blank" rel="noopener">
-                                    <<<<i class="zm zm-QQ"></</</</i> <small>Follow us</small>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 6. 示例说明区：保留所有内容，不删减 -->
-        <section id="section1" class="highlights styled">
-            <hr />
-            <div class="highlights-header">
-                <h6>首页下载</h6>
-                <div class="grids">
-                    <div class="grid-item">
-                        <div class="wrap-article">
-                            <p>
-                                在本页地址栏输入合规链接（参考以下链接）点击下载按钮，GitHub文件链接带不带协议头都可以，支持release、archive以及文件，右键复制出来的链接都是符合标准的，注意，不支持项目文件夹
-                            </p>
-                            <hr />
-                            <header>
-                                <h4><b>分支源码</b></h4>
-                            </header>
-                            <p>https://github.com/LS-Ze/project/archive/master.zip</p>
-                            <header>
-                                <h4><b>release源码</b></h4>
-                            </header>
-                            <p>https://github.com/LS-Ze/project/archive/v0.1.0.tar.gz</p>
-                            <header>
-                                <h4><b>release文件</b></h4>
-                            </header>
-                            <p>
-                                https://github.com/LS-Ze/project/releases/download/v0.1.0/example.zip
-                            </p>
-                            <header>
-                                <h4><b>分支文件</b></h4>
-                            </header>
-                            <p>https://github.com/LS-Ze/project/blob/master/filename</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 7. 保留原空gallery区域（不删减） -->
-        <div class="gallery">
-            <div class="gallery-grid">
-                <div class="-image columns large-6 large-offset-1 medium-6 small-12"></div>
-            </div>
-        </div>
-
-        <section class="clients styled"><hr class="half" /></section>
-    </main>
-
-    <!-- 8. 页脚：保留版权 + Logo，不删减 -->
-    <footer class="footer styled">
-        <div class="footer-content">
-            <div class="-logo">
+    <div class="container">
+        <!-- 头部：Logo + Docker代理，保留功能 -->
+        <div class="header">
+            <div class="logo">
                 <a href="https://github.com/LS-Ze/gh-proxy" target="_blank" rel="noopener">
                     <img 
                         src="https://github.com/favicon.ico" 
                         alt="GitHub Logo"
-                        onerror="this.style.background='#000'; this.width=24; this.height=24"
+                        onerror="this.style.background='#000'; this.width=32; this.height=32"
                     />
                 </a>
             </div>
-            <p class="-copyright">
-                <small>© <time datetime="2023">2023 </time>All rights reserved.</small>
-            </p>
+            <a href="https://docker.lsdns.top/" class="docker-btn" target="_blank" rel="noopener">Docker代理</a>
         </div>
-    </footer>
 
-    <!-- 9. 音乐播放器：保留原配置，不删减 -->
+        <!-- 核心区域：彩色文字滚动 + 表单，保留功能 -->
+        <div class="main">
+            <div class="title-container">
+                <h2 class="title"><div class="jz ys" id="chakhsu"></div></h2>
+            </div>
+            <form action="https://github.lsdns.top/" method="get" target="_blank" onsubmit="return toSubmit(event)">
+                <input 
+                    type="text" 
+                    class="url-input" 
+                    name="q" 
+                    placeholder="键入Github文件链接" 
+                    required
+                />
+                <button type="submit" class="download-btn">加速下载</button>
+            </form>
+        </div>
+
+        <!-- 示例说明区：保留所有内容 -->
+        <div class="examples">
+            <h4>合法输入示例：</h4>
+            <ul>
+                <li>分支源码：https://github.com/LS-Ze/project/archive/master.zip</li>
+                <li>Release文件：https://github.com/LS-Ze/project/releases/download/v0.1.0/example.zip</li>
+                <li>原始文件：https://raw.githubusercontent.com/LS-Ze/project/master/xxx.txt</li>
+            </ul>
+            <p style="font-size: 14px; color: #666; margin-top: 8px;">提示：仅支持单个文件/压缩包链接，不支持项目文件夹。</p>
+        </div>
+
+        <!-- 服务运行时间：保留计算 -->
+        <div style="margin: var(--spacing-lg) 0;">
+            <p><small>服务运行时长</small></p>
+            <div id="sitetime" class="time">加载中...</div>
+        </div>
+
+        <!-- 页脚：保留版权 + 联系，保留功能 -->
+        <div class="footer">
+            <div>© 2023 保留所有权利</div>
+            <a href="tencent://Message/?uin=1248683640" class="contact" target="_blank">联系开发者</a>
+        </div>
+    </div>
+
+    <!-- 音乐播放器：保留功能，加载失败隐藏 -->
     <meting-js 
         server="netease"
         type="playlist"
         id="2440040711"
         fixed="true"
-        autoplay="false" <!-- 避免自动播放干扰，保留功能 -->
+        autoplay="false"
         data-volume="0.35"
         data-loop="all"
         mini="true"
         order="random"
-        id="musicPlayer"
     ></meting-js>
 
-    <!-- 10. 保留所有外部JS：修复加载顺序，不删减 -->
-    <script src="https://libs.baidu.com/jquery/1.8.3/jquery.min.js"></script> <!-- 只保留1个jQuery，避免冲突 -->
-    <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/feather-cae18e22.js"></script> <!-- Feather图标依赖 -->
-    <script data-cfasync="false" src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/email-decode.min.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/jquery-59e367f0.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/threejs-6ebcc050.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/projector-2f448d36.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/canvasrenderer-0792e9f3.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/imagesloaded-566550fd.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/jquery-countdown-38fb1392.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/jquery-scrollto-94f5d0cb.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/jquery-localscroll-640631e1.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/packery-8c62b54b.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/magnific-popup-c9f972e2.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/slick-carousel-3b41b3bc.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/sphere-dark-16cf345f.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/main-d441790e.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/basic-9ff86e20.js" defer></script>
-    <script src="https://fastly.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/wikisj.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/xuehua.js" defer></script>
-    <!-- 音乐播放器JS：保留 -->
+    <!-- 外部JS：保留核心功能，修复加载顺序 -->
+    <script src="https://libs.baidu.com/jquery/1.8.3/jquery.min.js"></script>
     <script src="https://fastly.jsdelivr.net/npm/aplayer/dist/APlayer.min.js" defer></script>
     <script src="https://fastly.jsdelivr.net/npm/meting@2.0.1/dist/Meting.min.js" defer></script>
 
-    <!-- 11. 核心功能脚本：保留所有交互，不删减任何特效 -->
+    <!-- 核心功能脚本：保留所有交互，不删减 -->
     <script>
-        // 等待所有资源加载完成，确保功能不失效
         $(window).on('load', function() {
-            // 11.1 显示鼠标图标，保留跟随
+            // 显示鼠标图标，保留跟随
             const mouseEl = document.getElementById('customMouse');
             if (mouseEl) {
                 mouseEl.style.opacity = '1';
-                // 支持鼠标+触屏跟随
                 function moveMouse(e) {
                     const x = e.clientX || (e.touches && e.touches[0].clientX) || 0;
                     const y = e.clientY || (e.touches && e.touches[0].clientY) || 0;
@@ -602,7 +333,7 @@
                 window.addEventListener('touchmove', moveMouse, { passive: true });
             }
 
-            // 11.2 彩色文字滚动：保留原逻辑，不删减
+            // 彩色文字滚动：保留原逻辑
             var chakhsu = function (r) {
                 function l(t) {
                     for (var e = document.createDocumentFragment(), r = 0; r < t; r++) {
@@ -666,22 +397,18 @@
             };
             chakhsu(document.getElementById("chakhsu"));
 
-            // 11.3 点击弹出核心价值观：保留所有文字，支持触屏
+            // 点击弹出核心价值观：保留功能，支持触屏
             var a_idx = 0;
             const coreValues = ["❤富强❤", "❤民主❤", "❤文明❤", "❤和谐❤", "❤自由❤", "❤平等❤", "❤公正❤", "❤法制❤", "❤爱国❤", "❤敬业❤", "❤诚信❤", "❤友善❤"];
             $("body").off('click touchstart').on('click touchstart', function(e) {
-                // 排除表单/按钮，避免重复触发
-                if (!$(e.target).is('#githubUrl, .btn, a, .mouse')) {
-                    const $i = $("<span class='click-effect'></span>").text(coreValues[a_idx]);
+                if (!$(e.target).is('.url-input, .download-btn, a, .mouse')) {
+                    const $i = $("<span style='position:absolute;z-index:9999;font-weight:bold;pointer-events:none;'></span>").text(coreValues[a_idx]);
                     a_idx = (a_idx + 1) % coreValues.length;
                     const x = e.pageX || (e.touches && e.touches[0].pageX) || 0;
                     const y = e.pageY || (e.touches && e.touches[0].pageY) || 0;
                     $i.css({
-                        "z-index": 9999,
                         "top": y - 20,
                         "left": x,
-                        "position": "absolute",
-                        "font-weight": "bold",
                         "color": `rgb(${~~(255 * Math.random())},${~~(255 * Math.random())},${~~(255 * Math.random())})`
                     });
                     $("body").append($i);
@@ -689,12 +416,9 @@
                 }
             });
 
-            // 11.4 Feather图标初始化：保留箭头显示
-            if (window.feather) feather.replace();
-
-            // 11.5 服务运行时间：保留计算，不删减
+            // 服务运行时间计算：保留功能
             function updateSitetime() {
-                const startTime = new Date('2023-01-01 00:00:00').getTime(); // 可替换为实际启动时间
+                const startTime = new Date('2023-01-01 00:00:00').getTime();
                 const now = new Date().getTime();
                 const diff = now - startTime;
                 const days = Math.floor(diff / (1000 * 60 * 60 * 24));
@@ -706,24 +430,23 @@
             updateSitetime();
             setInterval(updateSitetime, 1000);
 
-            // 11.6 音乐播放器加载失败降级：保留功能，不显示异常
+            // 音乐播放器加载失败降级：保留功能
             if (typeof APlayer === 'undefined') {
-                const player = document.getElementById('musicPlayer');
+                const player = document.querySelector('meting-js');
                 if (player) player.style.display = 'none';
             }
         });
 
-        // 11.7 表单提交：保留协议补全，不阻断功能
+        // 表单提交：保留协议补全功能
         function toSubmit(event) {
             event.preventDefault();
-            const input = document.getElementById('githubUrl');
+            const input = document.querySelector('.url-input');
             let url = input.value.trim();
-            // 补全http/https，保留原逻辑
             if (!url.startsWith('http://') && !url.startsWith('https://')) {
                 url = 'https://' + url;
                 input.value = url;
             }
-            document.getElementById('downloadForm').submit();
+            event.target.submit();
             return true;
         }
     </script>

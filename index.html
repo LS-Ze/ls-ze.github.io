@@ -4,16 +4,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no" />
     <title>LSDNS-GitHub 文件加速</title>
-    <link rel="icon" href="https://github.com/favicon.ico" />
+    <link rel="icon" href="https://github.githubassets.com/favicons/favicon.svg" onerror="this.href='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='" />
     <meta name="author" content="Aether-Themes" />
     <meta name="description" content="GitHub,GitHub文件加速,GitHub代理" />
     <meta name="keywords" content="GitHub,GitHub文件加速,GitHub代理" />
     <meta name="theme-color" content="#00C66B" />
 
-    <!-- 保留原始CSS，确保风格一致 -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/css/font_954744_g42joo6uzdr.css" />
-    <link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" />
-
+    <!-- 保留核心样式 -->
     <style>
         * {
             margin: 0;
@@ -40,9 +37,10 @@
             margin: 30px 0;
         }
         .logo {
-            width: 60px;
-            height: 60px;
+            width: 40px;
+            height: 40px;
             background: #000;
+            border-radius: 4px;
         }
         .logo img {
             width: 100%;
@@ -124,9 +122,10 @@
             color: #00bfb3;
             text-decoration: none;
         }
+        /* 鼠标图标修复：尺寸+定位+加载降级 */
         .mouse {
-            width: 50px;
-            height: 50px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             position: fixed;
             left: -100px;
@@ -136,8 +135,9 @@
             transition: transform 0.05s, opacity 0.2s;
             opacity: 0;
         }
+        /* 小组件层级修复：避免遮挡 */
         #he-plugin-simple {
-            z-index: 9998 !important;
+            z-index: 9997 !important;
             position: fixed !important;
             top: 10px !important;
             right: 10px !important;
@@ -147,12 +147,12 @@
             bottom: 10px !important;
             left: 50% !important;
             transform: translateX(-50%) !important;
-            z-index: 9997 !important;
+            z-index: 9996 !important;
         }
     </style>
 </head>
 <body>
-    <!-- 天气插件 -->
+    <!-- 1. 天气小组件：修复加载+降级 -->
     <div id="he-plugin-simple"></div>
     <script>
         WIDGET = {
@@ -180,28 +180,44 @@
             }
         }
     </script>
+    <script>
+        // 加载失败自动隐藏
+        window.addEventListener('error', function(e) {
+            if (e.target.src && e.target.src.includes('widget.qweather.net')) {
+                setTimeout(() => {
+                    const weather = document.getElementById('he-plugin-simple');
+                    if (weather) weather.style.display = 'none';
+                }, 1000);
+            }
+        }, true);
+    </script>
     <script src="https://widget.qweather.net/simple/static/js/he-simple-common.js?v=2.0" defer></script>
 
-    <!-- 鼠标跟随 -->
+    <!-- 2. 鼠标图标：修复加载+尺寸 -->
     <img 
         class="mouse" 
-        src="https://github.com/favicon.ico" 
+        src="https://github.githubassets.com/favicons/favicon.svg" 
         alt="自定义鼠标"
+        onerror="this.style.background='#00bfb3'; this.src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='"
         id="customMouse"
     />
 
     <div class="container">
-        <!-- 头部 -->
+        <!-- 3. Logo：修复加载+尺寸 -->
         <div class="header">
             <div class="logo">
                 <a href="https://github.com/LS-Ze/gh-proxy" target="_blank">
-                    <img src="https://github.com/favicon.ico" alt="GitHub Logo" />
+                    <img 
+                        src="https://github.githubassets.com/favicons/favicon.svg" 
+                        alt="GitHub Logo"
+                        onerror="this.parentElement.style.background='#00bfb3'"
+                    />
                 </a>
             </div>
             <a href="https://docker.lsdns.top/" class="docker-btn" target="_blank">Docker代理</a>
         </div>
 
-        <!-- 核心区域 -->
+        <!-- 核心功能区 -->
         <div class="main">
             <h2 class="title"><div class="jz ys" id="chakhsu"></div></h2>
             <form action="https://github.lsdns.top/" method="get" target="_blank" onsubmit="return toSubmit(event)">
@@ -240,7 +256,7 @@
         </div>
     </div>
 
-    <!-- 音乐播放器 -->
+    <!-- 4. 音乐小组件：修复加载+降级 -->
     <meting-js 
         server="netease"
         type="playlist"
@@ -258,7 +274,7 @@
     <script src="https://fastly.jsdelivr.net/npm/aplayer/dist/APlayer.min.js" defer></script>
     <script src="https://fastly.jsdelivr.net/npm/meting@2.0.1/dist/Meting.min.js" defer></script>
 
-    <!-- 核心脚本 -->
+    <!-- 核心脚本：保留所有功能 -->
     <script>
         $(window).on('load', function() {
             // 显示鼠标图标
@@ -371,6 +387,12 @@
             }
             updateSitetime();
             setInterval(updateSitetime, 1000);
+
+            // 音乐小组件加载失败降级
+            if (typeof APlayer === 'undefined') {
+                const player = document.querySelector('meting-js');
+                if (player) player.style.display = 'none';
+            }
         });
 
         // 表单提交

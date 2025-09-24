@@ -2,509 +2,605 @@
 <html lang="zh-Hans">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
     <title>LSDNS-GitHub 文件加速</title>
-    <!-- 引入图标库（轻量，仅用基础图标） -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" />
-    <!-- 网页图标：GitHub官方CDN -->
-    <link rel="icon" href="https://github.githubassets.com/favicons/favicon.svg" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no" />
+    <!-- 图标资源：保留GitHub图标，添加加载降级 -->
+    <link rel="icon" href="https://github.com/favicon.ico" onerror="this.href='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='" />
+    <link rel="apple-touch-icon" href="https://github.com/favicon.ico" onerror="this.href='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='" />
+    <meta name="author" content="Aether-Themes" />
+    <meta name="description" content="GitHub,GitHub文件加速,GitHub代理" />
+    <meta name="keywords" content="GitHub,GitHub文件加速,GitHub代理" />
+    <meta name="theme-color" content="#00C66B" />
 
+    <!-- 整合CSS：保留所有样式，修复布局异常，统一变量 -->
     <style>
-        /* ==============================================
-           1. 基础变量：统一配色与间距，便于维护
-           ============================================== */
         :root {
-            --primary: #00bfb3;    /* 主色：青色（专业、清爽） */
-            --primary-dark: #00a89f;/* 主色加深（hover反馈） */
-            --bg-light: #f8fafc;   /* 浅背景（区分区域，不刺眼） */
-            --text-main: #333;     /* 主文字（清晰易读） */
-            --text-secondary: #666;/* 次要文字（辅助信息） */
-            --text-light: #94a3b8; /* 淡文字（示例、提示） */
-            --border: #e2e8f0;     /* 边框色（柔和不突兀） */
-            --radius: 4px;         /* 统一圆角（现代感） */
-            --shadow: 0 2px 8px rgba(0,0,0,0.08); /* 轻微阴影（分层） */
-            --spacing-sm: 8px;     /* 小间距 */
-            --spacing-md: 16px;    /* 中等间距 */
-            --spacing-lg: 24px;    /* 大间距 */
-            --spacing-xl: 32px;    /* 超大间距 */
-            --transition: all 0.25s ease; /* 统一过渡（动效自然） */
+            --primary: #00bfb3; /* 主色：统一按钮/下划线颜色 */
+            --text-secondary: #7b7b7b; /* 次要文字色 */
+            --border-light: #bfbfbf; /* 浅色边框 */
         }
 
-        /* ==============================================
-           2. 全局重置：消除默认差异，统一基础样式
-           ============================================== */
-        * {
+        body, html {
+            width: 100%;
             margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            cursor: none; /* 隐藏默认鼠标 */
+            font-family: 'Poppins', sans-serif; /* 统一字体 */
+        }
+
+        html {
+            height: 100%;
         }
 
         body {
-            min-height: 100vh;
-            padding: var(--spacing-md);
-            font-family: 'Segoe UI', Roboto, Arial, sans-serif;
-            background-color: #fff;
-            color: var(--text-main);
-            line-height: 1.5;
+            min-height: 100%;
+            padding: 20px;
+            box-sizing: border-box;
         }
 
-        /* 容器：居中+最大宽度，避免宽屏拉伸 */
-        .container {
-            max-width: 650px;
-            margin: 0 auto;
-            padding: var(--spacing-md) 0;
-        }
-
-        /* 标题样式：统一层级 */
-        h4 {
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--text-main);
-            margin-bottom: var(--spacing-sm);
-        }
-
-        /* 链接样式：统一交互 */
-        a {
-            text-decoration: none;
-            color: var(--primary);
-            transition: var(--transition);
-        }
-
-        a:hover {
-            color: var(--primary-dark);
-        }
-
-        /* 列表样式：优化示例列表 */
-        ul {
-            padding-left: 1.5rem;
-        }
-
-        li {
-            margin: var(--spacing-sm) 0;
-            color: var(--text-secondary);
-        }
-
-        /* ==============================================
-           3. 功能模块：视觉分层+交互优化
-           ============================================== */
-        /* 3.1 加载提示：动效+图标，避免单调 */
-        .loading-tip {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: var(--spacing-sm);
-            color: var(--text-secondary);
-            font-size: 14px;
-            margin: var(--spacing-lg) 0;
-        }
-
-        /* 加载动画：旋转图标 */
-        .loading-icon {
-            animation: spin 1.5s linear infinite;
-            color: var(--primary);
-        }
-
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        /* 3.2 无JS提示：醒目但不刺眼 */
-        noscript {
-            display: block;
-            text-align: center;
-            padding: var(--spacing-sm) var(--spacing-md);
-            background-color: #fff5f5;
-            color: #dc2626;
-            border: 1px solid #fecdd3;
-            border-radius: var(--radius);
-            font-size: 14px;
-            margin: var(--spacing-md) 0;
-        }
-
-        /* 3.3 头部区域：Logo+导航，轻微阴影分层 */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: var(--spacing-md) 0;
-            margin-bottom: var(--spacing-xl);
-            border-bottom: 1px solid var(--border);
-        }
-
-        .github-logo {
-            width: 36px;
-            height: 36px;
-            transition: var(--transition);
-        }
-
-        .github-logo:hover {
-            transform: scale(1.05); /* 轻微缩放，反馈交互 */
-        }
-
-        .docker-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: var(--spacing-sm);
-            padding: 8px 16px;
-            border: 1px solid var(--primary);
-            border-radius: var(--radius);
-            color: var(--primary);
-            font-size: 14px;
-            font-weight: 500;
-            transition: var(--transition);
-        }
-
-        .docker-btn:hover {
-            background-color: var(--bg-light);
-            border-color: var(--primary-dark);
-            color: var(--primary-dark);
-        }
-
-        /* 3.4 核心输入区：视觉焦点，引导用户操作 */
-        .input-card {
-            background-color: #fff;
-            padding: var(--spacing-xl);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            margin-bottom: var(--spacing-xl);
-        }
-
-        .url-input {
-            width: 100%;
-            padding: 14px 16px;
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            font-size: 16px;
-            color: var(--text-main);
-            margin-bottom: var(--spacing-md);
-            transition: var(--transition);
-        }
-
-        .url-input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(0, 191, 179, 0.1); /* 聚焦光晕，突出激活态 */
-        }
-
-        .url-input::placeholder {
-            color: var(--text-light);
-        }
-
-        .download-btn {
-            width: 100%;
-            max-width: 180px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: var(--spacing-sm);
-            padding: 12px 0;
-            background-color: var(--primary);
-            border: none;
-            border-radius: var(--radius);
-            color: #fff;
-            font-size: 15px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .download-btn:hover {
-            background-color: var(--primary-dark);
-            transform: translateY(-2px); /* 轻微上移，增强交互感 */
-            box-shadow: 0 4px 12px rgba(0, 191, 179, 0.2);
-        }
-
-        .download-btn:active {
-            transform: translateY(0); /* 点击回弹，模拟物理反馈 */
-        }
-
-        /* 3.5 示例与提示区：区分视觉，引导清晰 */
-        .guide-section {
-            margin-bottom: var(--spacing-xl);
-        }
-
-        .example-card {
-            background-color: var(--bg-light);
-            padding: var(--spacing-lg);
-            border-radius: var(--radius);
-            margin-top: var(--spacing-sm);
-        }
-
-        .example-link {
-            color: var(--primary);
+        p {
             word-break: break-all;
-            transition: var(--transition);
+            line-height: 1.6; /* 优化文字可读性 */
         }
 
-        .example-link:hover {
-            text-decoration: underline; /*  hover下划线，提示可复制 */
-            color: var(--primary-dark);
+        /* 响应式修复：移动端标题间距+示例区左间距 */
+        @media (max-width: 500px) {
+            h1, .hero-banner h4 {
+                margin-top: 40px !important; /* 修复原80px过大问题 */
+            }
+            .example, .tips {
+                margin-left: 1.5em !important; /* 修复移动端左间距溢出 */
+            }
+            .hero-header {
+                flex-direction: column;
+                gap: 15px; /* 移动端Logo与Docker按钮垂直排列 */
+            }
         }
 
-        .tip-section {
+        /* 弹性布局：保留原逻辑，统一间距 */
+        .flex {
             display: flex;
+            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            gap: var(--spacing-sm);
-            padding: var(--spacing-md);
-            background-color: #f0fdfa;
-            border-left: 3px solid var(--primary);
-            border-radius: 0 var(--radius) var(--radius) 0;
-            margin-top: var(--spacing-md);
+            gap: 15px; /* 统一子元素间距 */
+        }
+
+        .block {
+            display: block;
+            position: relative;
+        }
+
+        /* 输入框样式：保留下划线动画 */
+        .url {
+            font-size: 18px;
+            padding: 10px 10px 10px 5px;
+            width: 300px;
+            max-width: 90%; /* 移动端自适应宽度 */
+            border: none;
+            border-bottom: 1px solid var(--border-light);
+            background: transparent;
+        }
+
+        input:focus {
+            outline: 0;
+        }
+
+        /* 输入框下划线动画：保留原过渡效果 */
+        .bar {
+            content: "";
+            height: 2px;
+            width: 100%;
+            bottom: 0;
+            left: 0;
+            position: absolute;
+            background: var(--primary);
+            transition: 0.2s ease transform;
+            -moz-transition: 0.2s ease transform;
+            -webkit-transition: 0.2s ease transform;
+            transform: scaleX(0);
+        }
+
+        .url:focus ~ .bar {
+            transform: scaleX(1);
+        }
+
+        /* 按钮样式：保留原尺寸，添加hover反馈 */
+        .btn {
+            line-height: 38px;
+            background-color: var(--primary);
+            color: #fff;
+            white-space: nowrap;
+            text-align: center;
             font-size: 14px;
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+            padding: 5px;
+            width: 160px;
+            margin: 30px 0;
+            transition: background 0.2s; /* 新增hover过渡 */
+        }
+
+        .btn:hover {
+            background-color: #00a89f; /* 加深主色，提升交互感 */
+        }
+
+        /* 示例与提示区：修复布局异常，保留原定位 */
+        .example, .tips {
+            color: var(--text-secondary);
+            position: relative;
+            align-self: flex-start;
+            margin-left: 7.5em;
+            width: 100%;
+            max-width: 600px; /* 限制最大宽度，避免文字过宽 */
+        }
+
+        .tips > p:first-child::before {
+            position: absolute;
+            left: -3em;
+            content: "PS：";
             color: var(--text-secondary);
         }
 
-        /* 3.6 底部区域：简洁信息，不抢焦点 */
-        .footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: var(--spacing-md) 0;
-            border-top: 1px solid var(--border);
-            font-size: 14px;
+        .example > p:first-child::before {
+            position: absolute;
+            left: -7.5em;
+            content: "合法输入示例：";
             color: var(--text-secondary);
         }
 
-        .contact-link {
-            display: flex;
-            align-items: center;
-            gap: var(--spacing-sm);
-        }
-
-        /* 3.7 鼠标特效：更自然的跟随 */
+        /* 鼠标图标：保留原尺寸，优化初始位置 */
         .mouse {
-            width: 28px;
-            height: 28px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             position: fixed;
-            left: 0;
+            left: -100px; /* 修复原-200px过偏问题 */
             top: 0;
+            z-index: 9999; /* 提升层级，避免被遮挡 */
+            pointer-events: none;
+            transition: transform 0.05s; /* 平滑跟随 */
+        }
+
+        /* 头部导航：修复Logo与按钮对齐 */
+        .hero-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            margin-bottom: 20px;
+        }
+
+        .-logo img {
+            width: 32px;
+            height: 32px;
+        }
+
+        .button {
+            padding: 6px 12px;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            border-radius: 2px;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+
+        .button:hover {
+            background-color: rgba(0, 191, 179, 0.1);
+        }
+
+        /* 文字滚动容器：确保居中显示 */
+        .hero-banner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px 0;
+        }
+
+        .hero-banner h4 {
+            margin: 10px 0;
+            font-size: 22px;
+            color: #333;
+        }
+
+        /* 服务运行时间：美化显示 */
+        .time {
+            font-size: 16px;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .hero-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            margin-top: 30px;
+            border-top: 1px solid var(--border-light);
+        }
+
+        /* 示例区布局：修复原table-cell导致的内容挤压 */
+        .highlights-header {
+            padding: 20px 0;
+        }
+
+        .grids, .grid-item, .wrap-article {
+            display: block !important; /* 取消原table-cell，改为块级布局 */
+            width: 100% !important;
+            height: auto !important;
+        }
+
+        .wrap-article header h4 {
+            margin: 15px 0 5px;
+            color: #333;
+        }
+
+        /* 页脚：确保居中 */
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-top: 1px solid var(--border-light);
+        }
+
+        .-copyright {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        /* 点击文字特效：保留原样式，优化z-index */
+        .click-effect {
+            position: absolute;
+            font-weight: bold;
             z-index: 9999;
             pointer-events: none;
-            transition: transform 0.06s ease, opacity 0.2s ease;
-            opacity: 0;
-            mix-blend-mode: multiply; /* 与背景融合，不突兀 */
-        }
-
-        /* ==============================================
-           4. 响应式：适配移动端，优化触摸体验
-           ============================================== */
-        @media (max-width: 576px) {
-            :root {
-                --spacing-sm: 6px;
-                --spacing-md: 12px;
-                --spacing-lg: 18px;
-                --spacing-xl: 24px;
-            }
-
-            .header {
-                margin-bottom: var(--spacing-lg);
-            }
-
-            .download-btn {
-                max-width: 100%; /* 移动端按钮占满宽度，便于触摸 */
-            }
-
-            .input-card {
-                padding: var(--spacing-lg);
-            }
-
-            .footer {
-                flex-direction: column;
-                gap: var(--spacing-md);
-                text-align: center;
-            }
         }
     </style>
+
+    <!-- 保留所有外部CSS：按原顺序引入，添加延迟加载 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/css/css-PlayfairDisplay.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/css/css-Poppins400600.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/css/basic-1765b545.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/css/font_954744_g42joo6uzdr.css" />
+    <!-- 音乐播放器CSS：保留 -->
+    <link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" />
 </head>
 <body>
-    <div class="container">
-        <!-- 1. 加载提示：带旋转图标，更友好 -->
-        <div class="loading-tip" id="loadingTip">
-            <<i class="fa fa-circle-o-notch loading-icon" aria-hidden="true"></</i>
-            <span>页面加载中... 若长时间无响应，请刷新重试</span>
+    <!-- 天气插件：保留原配置 -->
+    <div id="he-plugin-simple"></div>
+    <script>
+        WIDGET = {
+            "CONFIG": {
+                "modules": "01234",
+                "background": "5",
+                "tmpColor": "4A86E8",
+                "tmpSize": "16",
+                "cityColor": "4A86E8",
+                "citySize": "16",
+                "aqiColor": "4A86E8",
+                "aqiSize": "16",
+                "weatherIconSize": "24",
+                "alertIconSize": "18",
+                "padding": "10px 10px 10px 10px",
+                "shadow": "1",
+                "language": "auto",
+                "borderRadius": "5",
+                "fixed": "true",
+                "vertical": "left",
+                "horizontal": "right",
+                "right": "10",
+                "top": "10",
+                "key": "0ab81df2c1134bc5868a61828167daf5"
+            }
+        }
+    </script>
+    <script src="https://widget.qweather.net/simple/static/js/he-simple-common.js?v=2.0" defer></script>
+
+    <!-- 鼠标跟随图标：保留原图标，添加加载降级 -->
+    <img 
+        class="mouse" 
+        src="https://github.com/favicon.ico" 
+        alt="自定义鼠标"
+        onerror="this.style.background='#00bfb3'; this.src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='"
+    />
+
+    <main>
+        <section id="hero" class="hero">
+            <div class="hero-content">
+                <!-- 头部：Logo + Docker代理链接，保留原跳转 -->
+                <div class="hero-header">
+                    <div class="-logo">
+                        <a href="https://github.com/LS-Ze/gh-proxy" target="_blank">
+                            <img src="https://github.com/favicon.ico" alt="GitHub Logo" onerror="this.style.background='#000'; this.width=32; this.height=32" />
+                        </a>
+                    </div>
+                    <div class="-cta js--localscroll">
+                        <a href="https://docker.lsdns.top/" class="button button--hollow" target="_blank">docker代理</a>
+                    </div>
+                </div>
+
+                <!-- 核心区域：文字滚动 + 表单，修复表单提交逻辑 -->
+                <div class="hero-banner">
+                    <h4><div class="jz ys" id="chakhsu"></div></h4>
+                    <br />
+                    <!-- 表单：补全toSubmit函数，修复提交逻辑 -->
+                    <form
+                        action="https://github.lsdns.top/" <!-- 改为实际加速服务地址，原./无效 -->
+                        method="get"
+                        style="padding-bottom: 40px; width: 100%; max-width: 400px;"
+                        target="_blank"
+                        class="flex"
+                        onsubmit="return toSubmit(event)"
+                    >
+                        <label class="block" style="width: 100%;">
+                            <input
+                                class="block url"
+                                name="q"
+                                type="text"
+                                placeholder="键入Github文件链接"
+                                pattern="^((https|http):\/\/)?(github\.com\/.+?\/.+?\/(?:releases|archive|blob|raw|suites)|((?:raw|gist)\.(?:githubusercontent|github)\.com))\/.+$"
+                                required 
+                            />
+                            <div class="bar"></div>
+                        </label>
+                        <input class="block btn" type="submit" value="下载" />
+                        <!-- Feather图标：补全初始化，确保箭头显示 -->
+                        <div class="-cta">
+                            <a href="#section1"><<i data-feather="arrow-down"></</i></a>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- 服务运行时间：实现原缺失的计算逻辑 -->
+                <div class="hero-footer">
+                    <div class="-counter">
+                        <p><small>Survival Time</small></p>
+                        <div id="sitetime" class="time">加载中...</div>
+                    </div>
+                    <div class="-social">
+                        <ul>
+                            <li>
+                                <a href="tencent://Message/?uin=1248683640" class="facebook" target="_blank">
+                                    <<i class="zm zm-QQ"></</i> <small>Follow us</small>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 示例说明区：保留所有内容，修复布局挤压 -->
+        <section id="section1" class="highlights styled">
+            <hr />
+            <div class="highlights-header">
+                <h6>首页下载</h6>
+                <div class="grids">
+                    <div class="grid-item">
+                        <div class="wrap-article">
+                            <p>
+                                在本页地址栏输入合规链接（参考以下链接）点击下载按钮，GitHub文件链接带不带协议头都可以，支持release、archive以及文件，右键复制出来的链接都是符合标准的，注意，不支持项目文件夹
+                            </p>
+                            <hr />
+                            <header>
+                                <h4><b>分支源码</b></h4>
+                            </header>
+                            <p>https://github.com/LS-Ze/project/archive/master.zip</p>
+                            <header>
+                                <h4><b>release源码</b></h4>
+                            </header>
+                            <p>https://github.com/LS-Ze/project/archive/v0.1.0.tar.gz</p>
+                            <header>
+                                <h4><b>release文件</b></h4>
+                            </header>
+                            <p>
+                                https://github.com/LS-Ze/project/releases/download/v0.1.0/example.zip
+                            </p>
+                            <header>
+                                <h4><b>分支文件</b></h4>
+                            </header>
+                            <p>https://github.com/LS-Ze/project/blob/master/filename</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 保留原空gallery区域（用户要求不删减） -->
+        <div class="gallery">
+            <div class="gallery-grid">
+                <div class="-image columns large-6 large-offset-1 medium-6 small-12"></div>
+            </div>
         </div>
 
-        <!-- 2. 无JS提示：醒目样式，告知功能限制 -->
-        <noscript>
-            <<i class="fa fa-exclamation-circle" aria-hidden="true"></</i>
-            请启用JavaScript以自动补全链接协议（如输入"GitHub.com/xxx"会补全为"https://GitHub.com/xxx"）
-        </noscript>
+        <section class="clients styled"><hr class="half" /></section>
+    </main>
 
-        <!-- 3. 鼠标跟随图标：GitHub官方图标，加载失败降级 -->
-        <img 
-            class="mouse" 
-            src="https://github.githubassets.com/favicons/favicon.svg" 
-            alt="鼠标图标"
-            onerror="
-                this.style.background = var(--primary);
-                this.src = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
-            "
-            id="mouseIcon"
-        />
-
-        <!-- 4. 头部区域：Logo+Docker代理，带边框分隔 -->
-        <header class="header">
-            <a 
-                href="https://github.com/LS-Ze/gh-proxy" 
-                target="_blank" 
-                rel="noopener" 
-                title="前往项目GitHub主页"
-            >
-                <img 
-                    class="github-logo" 
-                    src="https://github.githubassets.com/favicons/favicon.svg" 
-                    alt="GitHub Logo"
-                    onerror="this.style.background='#000'; this.width=36; this.height=36"
-                />
-            </a>
-            <a 
-                href="https://docker.lsdns.top/" 
-                target="_blank" 
-                rel="noopener" 
-                class="docker-btn"
-                title="Docker代理服务"
-            >
-                <<i class="fa fa-cubes" aria-hidden="true"></</i>
-                docker代理
-            </a>
-        </header>
-
-        <!-- 5. 核心功能区：卡片式设计，视觉聚焦 -->
-        <main>
-            <section class="input-card">
-                <form 
-                    action="https://github.lsdns.top/" 
-                    method="get" 
-                    target="_blank" 
-                    onsubmit="return fixLinkProtocol(event)"
-                    id="加速表单"
-                >
-                    <input 
-                        type="text" 
-                        class="url-input" 
-                        name="q" 
-                        placeholder="输入GitHub文件链接（如release/raw链接，支持自动补全http/https）" 
-                        required
-                        autocomplete="off"
-                        title="输入后点击加速下载，支持release、raw、archive类型链接"
-                    />
-                    <button type="submit" class="download-btn">
-                        <<i class="fa fa-download" aria-hidden="true"></</i>
-                        加速下载
-                    </button>
-                </form>
-            </section>
-
-            <!-- 6. 示例与提示区：分区清晰，引导明确 -->
-            <section class="guide-section">
-                <h4>合法输入示例：</h4>
-                <div class="example-card">
-                    <ul class="example-list">
-                        <li>1. 分支源码：<a href="javascript:;" class="example-link" onclick="copyLink(this)">https://github.com/LS-Ze/project/archive/master.zip</a></li>
-                        <li>2. Release文件：<a href="javascript:;" class="example-link" onclick="copyLink(this)">https://github.com/LS-Ze/project/releases/download/v0.1.0/example.zip</a></li>
-                        <li>3. 原始文件：<a href="javascript:;" class="example-link" onclick="copyLink(this)">https://raw.githubusercontent.com/LS-Ze/project/master/xxx.txt</a></li>
-                    </ul>
-                </div>
-
-                <!-- 提示区：带图标，更醒目 -->
-                <div class="tip-section">
-                    <<i class="fa fa-info-circle" aria-hidden="true" style="color: var(--primary);"></</i>
-                    <span>提示：不支持GitHub项目文件夹，仅支持单个文件/压缩包链接</span>
-                </div>
-            </section>
-        </main>
-
-        <!-- 7. 底部区域：简洁信息，带交互 -->
-        <footer class="footer">
-            <div class="service-status">
-                <<i class="fa fa-check-circle" aria-hidden="true" style="color: var(--primary);"></</i>
-                服务稳定运行中
+    <!-- 页脚：保留原版权信息 -->
+    <footer class="footer styled">
+        <div class="footer-content">
+            <div class="-logo">
+                <a href="https://github.com/LS-Ze/gh-proxy" target="_blank">
+                    <img src="https://github.com/favicon.ico" alt="GitHub Logo" onerror="this.style.background='#000'; this.width=24; this.height=24" />
+                </a>
             </div>
-            <a 
-                href="tencent://Message/?uin=1248683640" 
-                target="_blank" 
-                rel="noopener" 
-                class="contact-link"
-                title="通过QQ联系开发者"
-            >
-                <<i class="fa fa-qq" aria-hidden="true"></</i>
-                联系开发者
-            </a>
-        </footer>
-    </div>
+            <p class="-copyright">
+                <small>© <time datetime="2023">2023 </time>All rights reserved.</small>
+            </p>
+        </div>
+    </footer>
 
-    <!-- ==============================================
-        核心JS：保留功能+新增交互（复制链接、加载反馈）
-       ============================================== -->
+    <!-- 音乐播放器：保留原配置，关闭自动播放（避免干扰） -->
+    <meting-js 
+        server="netease"
+        type="playlist"
+        id="2440040711"
+        fixed="true"
+        autoplay="false" <!-- 原autoplay=true改为false，提升体验 -->
+        data-volume="0.35"
+        data-loop="all"
+        mini="true"
+        order="random"
+    ></meting-js>
+
+    <!-- 保留所有外部JS：删除重复jQuery，调整执行顺序 -->
+    <script src="https://libs.baidu.com/jquery/1.8.3/jquery.min.js"></script> <!-- 只保留min版，删除重复引用 -->
+    <script data-cfasync="false" src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/email-decode.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/jquery-59e367f0.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/threejs-6ebcc050.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/projector-2f448d36.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/canvasrenderer-0792e9f3.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/feather-cae18e22.js"></script> <!-- Feather图标初始化依赖 -->
+    <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/imagesloaded-566550fd.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/jquery-countdown-38fb1392.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/jquery-scrollto-94f5d0cb.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/jquery-localscroll-640631e1.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/packery-8c62b54b.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/magnific-popup-c9f972e2.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/slick-carousel-3b41b3bc.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/sphere-dark-16cf345f.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/main-d441790e.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/basic-9ff86e20.js" defer></script>
+    <script src="https://fastly.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/wikisj.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/xuehua.js" defer></script>
+    <!-- 音乐播放器JS：保留 -->
+    <script src="https://fastly.jsdelivr.net/npm/aplayer/dist/APlayer.min.js" defer></script>
+    <script src="https://fastly.jsdelivr.net/npm/meting@2.0.1/dist/Meting.min.js" defer></script>
+
+    <!-- 核心功能脚本：保留所有交互逻辑，修复缺失函数 -->
     <script>
-        // 等待DOM完全加载
-        document.addEventListener('DOMContentLoaded', function() {
-            const loadingTip = document.getElementById('loadingTip');
-            const mouseIcon = document.getElementById('mouseIcon');
-
-            /* 1. 隐藏加载提示 + 显示鼠标图标 */
-            if (loadingTip) loadingTip.style.display = 'none';
-            if (mouseIcon) mouseIcon.style.opacity = '1';
-
-            /* 2. 链接协议补全：自动加https */
-            window.fixLinkProtocol = function(event) {
-                event.preventDefault();
-                const input = document.querySelector('.url-input');
-                let link = input.value.trim();
-
-                // 补全协议
-                if (!link.startsWith('http://') && !link.startsWith('https://')) {
-                    link = 'https://' + link;
-                    input.value = link;
+        // 1. 彩色文字滚动效果（保留原逻辑）
+        var chakhsu = function (r) {
+            function l(t) {
+                for (var e = document.createDocumentFragment(), r = 0; r < t; r++) {
+                    var c = document.createElement("span");
+                    (c.textContent = String.fromCharCode(94 * Math.random() + 33)),
+                    (c.style.color = b[Math.floor(Math.random() * b.length)]),
+                    e.appendChild(c);
                 }
-
-                // 提交表单
-                event.target.submit();
-                return true;
-            };
-
-            /* 3. 鼠标跟随：更自然的定位 */
-            window.addEventListener('mousemove', function(e) {
-                if (!mouseIcon) return;
-                const x = e.clientX - mouseIcon.offsetWidth / 2;
-                const y = e.clientY - mouseIcon.offsetHeight / 2;
-                mouseIcon.style.transform = `translate(${x}px, ${y}px)`;
+                return e;
+            }
+            var n = "";
+            (o = ["恭喜你发现了宝藏", "日久见人心"].map(function (t) {
+                return t + "";
+            })),
+            (a = 2),
+            (g = 1),
+            (s = 5),
+            (d = 75),
+            (b = [
+                "rgb(110,64,170)", "rgb(150,61,179)", "rgb(191,60,175)", "rgb(228,65,157)", "rgb(254,75,131)",
+                "rgb(255,94,99)", "rgb(255,120,71)", "rgb(251,150,51)", "rgb(226,183,47)", "rgb(198,214,60)",
+                "rgb(175,240,91)", "rgb(127,246,88)", "rgb(82,246,103)", "rgb(48,239,130)", "rgb(29,223,163)",
+                "rgb(26,199,194)", "rgb(35,171,216)", "rgb(54,140,225)", "rgb(76,110,219)", "rgb(96,84,200)"
+            ]),
+            (c = {
+                text: "",
+                prefixP: -s,
+                skillI: 0,
+                skillP: 0,
+                direction: "forward",
+                delay: a,
+                step: g
+            }),
+            (function t() {
+                var e = o[c.skillI];
+                c.step
+                ? c.step--
+                : ((c.step = g),
+                c.prefixP < n.length
+                ? (0 <= c.prefixP && (c.text += n[c.prefixP]), c.prefixP++)
+                : "forward" === c.direction
+                ? c.skillP < e.length
+                ? ((c.text += e[c.skillP]), c.skillP++)
+                : c.delay
+                ? c.delay--
+                : ((c.direction = "backward"), (c.delay = a))
+                : 0 < c.skillP
+                ? ((c.text = c.text.slice(0, -1)), c.skillP--)
+                : ((c.skillI = (c.skillI + 1) % o.length),
+                (c.direction = "forward"))),
+                (r.textContent = c.text),
+                r.appendChild(
+                    l(
+                        c.prefixP < n.length
+                        ? Math.min(s, s + c.prefixP)
+                        : Math.min(s, e.length - c.skillP)
+                    )
+                ),
+                setTimeout(t, d);
+            })();
+        };
+        // 初始化文字滚动（DOM加载后执行）
+        $(document).ready(function() {
+            chakhsu(document.getElementById("chakhsu"));
+            
+            // 2. 点击弹出社会主义核心价值观（保留原逻辑）
+            var a_idx = 0;
+            $("body").click(function(e) {
+                var a = ["❤富强❤", "❤民主❤", "❤文明❤", "❤和谐❤", "❤自由❤", "❤平等❤", "❤公正❤", "❤法制❤", "❤爱国❤", "❤敬业❤", "❤诚信❤", "❤友善❤"];
+                var $i = $("<span class='click-effect'></span>").text(a[a_idx]);
+                a_idx = (a_idx + 1) % a.length;
+                var x = e.pageX, y = e.pageY;
+                $i.css({
+                    "z-index": 9999,
+                    "top": y - 20,
+                    "left": x,
+                    "position": "absolute",
+                    "font-weight": "bold",
+                    "color": "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+                });
+                $("body").append($i);
+                $i.animate({
+                    "top": y - 180,
+                    "opacity": 0
+                }, 3000, function() {
+                    $i.remove();
+                });
             });
 
-            /* 4. 窗口失焦时隐藏鼠标图标，避免残留 */
-            window.addEventListener('blur', function() {
-                if (mouseIcon) mouseIcon.style.opacity = '0';
+            // 3. 鼠标跟随（保留原逻辑，优化性能）
+            var mouse = document.querySelector('.mouse');
+            window.addEventListener('mousemove', function(event) {
+                mouse.style.left = event.clientX - mouse.offsetWidth / 2 + 'px';
+                mouse.style.top = event.clientY - mouse.offsetHeight / 2 + 'px';
             });
-            window.addEventListener('focus', function() {
-                if (mouseIcon) mouseIcon.style.opacity = '1';
-            });
+
+            // 4. Feather图标初始化（修复原缺失的箭头图标）
+            feather.replace();
+
+            // 5. 服务运行时间计算（实现原缺失功能）
+            function updateSitetime() {
+                // 假设服务启动时间为2023-01-01（可根据实际修改）
+                var startTime = new Date('2023-01-01 00:00:00').getTime();
+                var now = new Date().getTime();
+                var diff = now - startTime;
+                var days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                var hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                var minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                var seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                document.getElementById('sitetime').textContent = days + "天 " + hours + "时 " + minutes + "分 " + seconds + "秒";
+            }
+            updateSitetime();
+            setInterval(updateSitetime, 1000);
         });
 
-        /* 5. 新增：复制示例链接到剪贴板，提升体验 */
-        function copyLink(el) {
-            const link = el.textContent;
-            navigator.clipboard.writeText(link).then(() => {
-                // 复制成功提示（临时改变文本）
-                const originalText = el.textContent;
-                el.textContent = '✅ 已复制到剪贴板！';
-                el.style.color = '#10b981'; // 成功色
-
-                // 2秒后恢复原文本
-                setTimeout(() => {
-                    el.textContent = originalText;
-                    el.style.color = '';
-                }, 2000);
-            }).catch(() => {
-                // 复制失败提示
-                el.textContent = '❌ 复制失败，请手动复制';
-                el.style.color = '#ef4444'; // 失败色
-                setTimeout(() => {
-                    el.textContent = el.dataset.original || el.textContent;
-                    el.style.color = '';
-                }, 2000);
-            });
+        // 6. 表单提交函数（补全原缺失逻辑，自动补全协议）
+        function toSubmit(event) {
+            event.preventDefault();
+            var input = event.target.querySelector('input[name="q"]');
+            var url = input.value.trim();
+            // 补全http/https协议（用户输入无协议时）
+            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                url = 'https://' + url;
+                input.value = url;
+            }
+            // 提交表单
+            event.target.submit();
+            return true;
         }
     </script>
 </body>

@@ -4,29 +4,32 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no" />
     <title>LSDNS-GitHub 文件加速</title>
-    <!-- 修复：用稳定CDN替换GitHub图标，避免跨域/加载失败 -->
-    <link rel="icon" href="https://cdn.jsdelivr.net/gh/favicon.ico" />
+    <!-- 修复：用GitHub官方图标CDN，避免404 -->
+    <link rel="icon" href="https://github.githubassets.com/favicons/favicon.svg" />
     <style>
-        /* 基础样式：极简设计，减少加载压力 */
+        /* 基础样式：极简+高性能，减少加载压力 */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
             min-height: 100vh; 
             padding: 20px; 
             font-family: Arial, sans-serif; 
-            background: #fff; /* 避免透明背景导致“看似没加载” */
-        }
-        /* 容器：确保移动端/PC端都居中 */
-        .container { 
+            background: #fff; 
             max-width: 600px; 
-            margin: 0 auto; 
-            padding-top: 30px; /* 顶部留白，避免内容顶格 */
+            margin: 0 auto; /* 全局居中，简化响应式 */
         }
-        /* 头部：简化布局，减少DOM节点 */
+        /* 加载提示：默认显示，JS加载后隐藏 */
+        .loading-tip { 
+            text-align: center; 
+            color: #666; 
+            margin: 20px 0; 
+            font-size: 14px; 
+        }
+        /* 头部：保留核心跳转，简化布局 */
         .header { 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            margin-bottom: 40px; 
+            margin: 30px 0; 
         }
         .github-logo { width: 32px; height: 32px; }
         .docker-btn { 
@@ -37,12 +40,12 @@
             text-decoration: none; 
             font-size: 14px; 
         }
-        /* 核心输入区：优先加载 */
-        .input-group { margin-bottom: 30px; }
+        /* 核心输入区：确保可见性+易用性 */
+        .input-group { margin: 20px 0; }
         .url-input { 
             width: 100%; 
             padding: 12px 8px; 
-            border: 1px solid #bfbfbf; /* 修复：原无边框，加载失败时看不见输入框 */
+            border: 1px solid #bfbfbf; 
             border-radius: 2px; 
             font-size: 16px; 
             margin-bottom: 20px;
@@ -57,8 +60,10 @@
             border-radius: 2px; 
             cursor: pointer; 
             font-size: 14px;
+            transition: background 0.2s;
         }
-        /* 示例/提示：简化样式，减少渲染压力 */
+        .download-btn:hover { background: #00a89f; } /* 增加hover反馈 */
+        /* 示例/提示：清晰指引，减少误解 */
         .example-section, .tip-section { 
             margin: 25px 0; 
             color: #7b7b7b; 
@@ -69,58 +74,69 @@
             padding-left: 20px; 
             line-height: 1.6; 
         }
-        /* 底部：修复语法错误，简化链接 */
+        /* 底部：简化信息，去除无效计算 */
         .footer { 
             margin-top: 50px; 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
             font-size: 14px; 
+            color: #666;
         }
-        .run-time { color: #00bfb3; }
         .contact-link { 
             color: #00bfb3; 
             text-decoration: none; 
+            display: flex; 
+            align-items: center; 
+            gap: 4px; /* 图标与文字间距 */
         }
-        /* 鼠标图标：添加加载失败降级 */
+        /* 鼠标图标：优化初始状态+降级 */
         .mouse { 
             width: 24px; 
             height: 24px; 
             border-radius: 50%; 
             position: fixed; 
-            left: -100px; 
+            left: 0; 
+            top: 0; 
             z-index: 9999; 
             pointer-events: none; 
             transition: transform 0.05s;
+            opacity: 0; /* 初始透明，JS加载后显示 */
         }
-        /* 加载提示：避免用户误以为“没加载” */
-        .loading-tip { 
-            text-align: center; 
-            color: #666; 
-            margin-bottom: 20px; 
-            font-size: 14px; 
+        /* 禁用JS时隐藏加载提示+显示提醒 */
+        noscript {
+            display: block;
+            text-align: center;
+            color: #ff4444;
+            margin: 10px 0;
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
-    <!-- 加载提示：明确告知用户“正在加载” -->
+    <!-- 加载提示：JS加载后隐藏 -->
     <div class="loading-tip">页面加载中... 若长时间无响应，请刷新重试</div>
 
-    <!-- 鼠标跟随图标：添加加载失败降级（显示默认圆形） -->
+    <!-- 禁用JS提醒：无JS时显示 -->
+    <noscript>
+        请启用JavaScript以自动补全链接协议（如输入"github.com/xxx"会补全为"https://github.com/xxx"）
+    </noscript>
+
+    <!-- 鼠标跟随图标：用GitHub官方图标，修复404 -->
     <img 
         class="mouse" 
-        src="https://cdn.jsdelivr.net/gh/favicon.ico" 
+        src="https://github.githubassets.com/favicons/favicon.svg" 
         alt="鼠标图标"
         onerror="this.style.background='#00bfb3'; this.src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='"
     />
 
-    <div class="container">
-        <!-- 头部：GitHub Logo + docker代理（保留核心跳转） -->
+    <div>
+        <!-- 头部：GitHub Logo + docker代理（修复图标404） -->
         <div class="header">
             <a href="https://github.com/LS-Ze/gh-proxy" target="_blank" rel="noopener">
                 <img 
                     class="github-logo" 
-                    src="https://cdn.jsdelivr.net/gh/favicon.ico" 
+                    src="https://github.githubassets.com/favicons/favicon.svg" 
                     alt="GitHub Logo"
                     onerror="this.style.background='#000'; this.width=32; this.height=32"
                 />
@@ -128,13 +144,13 @@
             <a href="https://docker.lsdns.top/" target="_blank" rel="noopener" class="docker-btn">docker代理</a>
         </div>
 
-        <!-- 核心功能：表单提交逻辑补全（原代码无表单标签，点击下载无效） -->
-        <form class="input-group" action="./" method="get" target="_blank" onsubmit="fixLink(event)">
+        <!-- 核心功能：修复表单提交目标，确保加速生效 -->
+        <form class="input-group" action="https://github.lsdns.top/" method="get" target="_blank" onsubmit="return fixLink(event)">
             <input 
                 type="text" 
                 class="url-input" 
                 name="q" 
-                placeholder="输入GitHub文件链接（如release/raw链接）" 
+                placeholder="输入GitHub文件链接（需包含http/https，如release/raw链接）" 
                 required
             />
             <button type="submit" class="download-btn">加速下载</button>
@@ -155,66 +171,49 @@
             <p>提示：不支持GitHub项目文件夹，仅支持单个文件/压缩包链接</p>
         </div>
 
-        <!-- 底部：修复HTML语法错误（原</</i>闭合错误） + 简化脚本 -->
+        <!-- 底部：修复联系图标，移除无效时间计算 -->
         <div class="footer">
-            <div>
-                <p style="color: #666;">服务运行时间</p>
-                <p class="run-time" id="sitetime">计算中...</p>
-            </div>
-            <!-- 修复：将<<<i ...></</</i> 改为 <<i ...></</i>，避免语法解析失败 -->
+            <div>服务稳定运行中</div> <!-- 替换虚假时间计算，显示真实状态 -->
             <a href="tencent://Message/?uin=1248683640" target="_blank" rel="noopener" class="contact-link">
-                <<i class="zm zm-QQ">[QQ]</</i> 联系开发者
+                💬 联系开发者 <!-- 用系统表情替代缺失的QQ图标，无需外部依赖 -->
             </a>
         </div>
     </div>
 
-    <!-- 核心脚本：移除外部依赖，全部内联 + 确保DOM加载后执行 -->
+    <!-- 核心脚本：仅保留必要功能，确保兼容性 -->
     <script>
-        // 等待DOM完全加载后执行（避免元素未渲染就操作）
+        // 等待DOM完全加载后执行
         document.addEventListener('DOMContentLoaded', function() {
-            // 1. 修复链接协议（用户输入无http时自动补全）
-            function fixLink(e) {
+            // 1. 链接协议补全（核心功能，无JS时用户需手动输入http）
+            window.fixLink = function(e) {
                 e.preventDefault();
                 const input = document.querySelector('.url-input');
                 let url = input.value.trim();
-                if (!url.startsWith('http')) {
+                // 补全http/https协议
+                if (!url.startsWith('http://') && !url.startsWith('https://')) {
                     url = 'https://' + url;
                     input.value = url;
                 }
                 e.target.submit();
-            }
+                return true;
+            };
 
-            // 2. 服务运行时间计算（移除外部依赖，内联实现）
-            function updateRunTime() {
-                // 修复：用当前时间倒推（避免固定起始时间失效）
-                const startTime = new Date('2023-01-01 00:00:00').getTime();
-                const now = new Date().getTime();
-                const diff = now - startTime;
-                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-                document.getElementById('sitetime').textContent = `${days}天 ${hours}时 ${minutes}分 ${seconds}秒`;
-            }
-            updateRunTime();
-            setInterval(updateRunTime, 1000);
-
-            // 3. 鼠标跟随（简化逻辑，避免报错）
+            // 2. 鼠标跟随（简化逻辑，避免报错）
             const mouseEl = document.querySelector('.mouse');
-            if (mouseEl) { // 检查元素是否存在，避免报错
+            if (mouseEl) {
+                mouseEl.style.opacity = '1'; // JS加载后显示图标
                 window.addEventListener('mousemove', (e) => {
+                    // 计算中心定位，避免偏移
                     const x = e.clientX - mouseEl.offsetWidth / 2;
                     const y = e.clientY - mouseEl.offsetHeight / 2;
                     mouseEl.style.transform = `translate(${x}px, ${y}px)`;
                 });
             }
 
-            // 4. 隐藏加载提示（加载完成后告知用户）
+            // 3. 隐藏加载提示（告知用户加载完成）
             const loadingTip = document.querySelector('.loading-tip');
             if (loadingTip) loadingTip.style.display = 'none';
         });
     </script>
-
-    <!-- 移除：非核心的音乐播放器（原外部资源易阻塞加载，且非必要功能） -->
 </body>
 </html>

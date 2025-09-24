@@ -1,431 +1,490 @@
 <!DOCTYPE html>
 <html lang="zh-Hans">
-<head>
+  <style>
+    body,
+    html {
+      width: 100%;
+      margin: 0;
+      cursor: none;           
+
+    }
+    html {
+      height: 100%;
+    }
+    body {
+      min-height: 100%;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    p {
+      word-break: break-all;
+    }
+    @media (max-width: 500px) {
+      h1 {
+        margin-top: 80px;
+      }
+    }
+    .flex {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .block {
+      display: block;
+      position: relative;
+    }
+    .url {
+      font-size: 18px;
+      padding: 10px 10px 10px 5px;
+      position: relative;
+      width: 300px;
+      border: none;
+      border-bottom: 1px solid #bfbfbf;
+    }
+    input:focus {
+      outline: 0;
+    }
+    .bar {
+      content: "";
+      height: 2px;
+      width: 100%;
+      bottom: 0;
+      position: absolute;
+      background: #00bfb3;
+      transition: 0.2s ease transform;
+      -moz-transition: 0.2s ease transform;
+      -webkit-transition: 0.2s ease transform;
+      transform: scaleX(0);
+    }
+    .url:focus ~ .bar {
+      transform: scaleX(1);
+    }
+    .btn {
+      line-height: 38px;
+      background-color: #00bfb3;
+      color: #fff;
+      white-space: nowrap;
+      text-align: center;
+      font-size: 14px;
+      border: none;
+      border-radius: 2px;
+      cursor: pointer;
+      padding: 5px;
+      width: 160px;
+      margin: 30px 0;
+    }
+    .example,
+    .tips {
+      color: #7b7b7b;
+      position: relative;
+      align-self: flex-start;
+      margin-left: 7.5em;
+    }
+    .tips > p:first-child::before {
+      position: absolute;
+      left: -3em;
+      content: "PS：";
+      color: #7b7b7b;
+    }
+    .example > p:first-child::before {
+      position: absolute;
+      left: -7.5em;
+      content: "合法输入示例：";
+      color: #7b7b7b;
+    }
+	function adjustIframe(){
+        var ifm= document.getElementById("bi_iframe");
+        ifm.height=document.documentElement.clientHeight;
+        ifm.width=document.documentElement.clientWidth;
+	}
+	
+	.mouse{
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;;
+        position: fixed;
+        left: -200px;
+        z-index: 1000;
+        pointer-events: none;
+    }
+	</style>
+	<head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
     <title>LSDNS-GitHub 文件加速</title>
-    <link rel="icon" href="https://github.githubassets.com/favicons/favicon.svg" onerror="this.href='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,shrink-to-fit=no"
+    />
+    <link
+      href="https://github.com/favicon.ico"
+      rel="icon"
+    />
+    <link
+      href="https://github.com/favicon.ico"
+      rel="apple-touch-icon"
+    />
     <meta name="author" content="Aether-Themes" />
     <meta name="description" content="GitHub,GitHub文件加速,GitHub代理" />
     <meta name="keywords" content="GitHub,GitHub文件加速,GitHub代理" />
     <meta name="theme-color" content="#00C66B" />
-
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            padding: 20px;
-            min-height: 100vh;
-            background: #fff;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: relative;
-        }
-        .container {
-            width: 100%;
-            max-width: 500px;
-            z-index: 2; /* 提升主内容层级，确保不被遮挡 */
-        }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: 30px 0;
-        }
-        .logo {
-            width: 40px;
-            height: 40px;
-            background: #000;
-            border-radius: 4px;
-        }
-        .logo img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .docker-btn {
-            padding: 8px 16px;
-            border: 1px solid #00bfb3;
-            color: #00bfb3;
-            border-radius: 2px;
-            text-decoration: none;
-            font-size: 14px;
-        }
-        .main {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 30px;
-        }
-        .title-container {
-            background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%); /* 恢复背景 */
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-        .title {
-            font-size: 24px;
-            color: #333;
-            text-align: center;
-            line-height: 1.5;
-        }
-        .url-input {
-            width: 100%;
-            padding: 12px 16px;
-            border: 1px solid #ddd;
-            border-radius: 2px;
-            font-size: 16px;
-            margin-bottom: 20px;
-            outline: none;
-        }
-        .url-input:focus {
-            border-color: #00bfb3;
-        }
-        .download-btn {
-            width: 100%;
-            max-width: 200px;
-            padding: 12px;
-            background: #00bfb3;
-            color: #fff;
-            border: none;
-            border-radius: 2px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        .examples {
-            width: 100%;
-            margin-top: 20px;
-        }
-        .examples h4 {
-            font-size: 18px;
-            color: #333;
-            margin-bottom: 10px;
-        }
-        .examples ul {
-            list-style: none;
-            padding-left: 0;
-        }
-        .examples li {
-            margin: 10px 0;
-            color: #666;
-            font-size: 14px;
-            word-break: break-all;
-        }
-        .footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: auto;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
-            font-size: 14px;
-            color: #666;
-        }
-        .contact {
-            color: #00bfb3;
-            text-decoration: none;
-        }
-        /* 鼠标图标：尺寸+定位+加载降级 */
-        .mouse {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            position: fixed;
-            left: -100px;
-            top: 0;
-            z-index: 9999;
-            pointer-events: none;
-            transition: transform 0.05s, opacity 0.2s;
-            opacity: 0;
-        }
-        /* 天气小组件：层级+加载降级 */
-        #he-plugin-simple {
-            z-index: 9997 !important;
-            position: fixed !important;
-            top: 10px !important;
-            right: 10px !important;
-            display: none;
-        }
-        /* 音乐小组件：最终修复-层级+尺寸+加载降级 */
-        meting-js {
-            position: fixed !important;
-            bottom: 10px !important;
-            left: 50% !important;
-            transform: translateX(-50%) !important;
-            z-index: 9996 !important;
-            display: none;
-            width: 240px !important; /* 进一步缩小宽度，避免遮挡 */
-            height: auto !important;
-        }
-    </style>
-</head>
-<body>
-    <!-- 1. 天气小组件：修复加载+显示 -->
-    <div id="he-plugin-simple"></div>
-    <script>
-        WIDGET = {
-            "CONFIG": {
-                "modules": "01234",
-                "background": "5",
-                "tmpColor": "4A86E8",
-                "tmpSize": "16",
-                "cityColor": "4A86E8",
-                "citySize": "16",
-                "aqiColor": "4A86E8",
-                "aqiSize": "16",
-                "weatherIconSize": "24",
-                "alertIconSize": "18",
-                "padding": "10px 10px 10px 10px",
-                "shadow": "1",
-                "language": "auto",
-                "borderRadius": "5",
-                "fixed": "true",
-                "vertical": "left",
-                "horizontal": "right",
-                "right": "10",
-                "top": "10",
-                "key": "0ab81df2c1134bc5868a61828167daf5"
-            }
-        }
-    </script>
-    <script>
-        window.addEventListener('load', function() {
-            const weather = document.getElementById('he-plugin-simple');
-            if (weather) weather.style.display = 'block';
-        });
-        window.addEventListener('error', function(e) {
-            if (e.target.src && e.target.src.includes('widget.qweather.net')) {
-                const weather = document.getElementById('he-plugin-simple');
-                if (weather) weather.style.display = 'none';
-            }
-        }, true);
-    </script>
-    <script src="https://widget.qweather.net/simple/static/js/he-simple-common.js?v=2.0" defer></script>
-
-    <!-- 2. 鼠标图标：修复加载+显示 -->
-    <img 
-        class="mouse" 
-        src="https://github.githubassets.com/favicons/favicon.svg" 
-        alt="自定义鼠标"
-        onerror="this.style.background='#00bfb3'; this.src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='"
-        id="customMouse"
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/css/css-PlayfairDisplay.css"
     />
-
-    <div class="container">
-        <!-- 3. Logo：修复加载+显示 -->
-        <div class="header">
-            <div class="logo">
-                <a href="https://github.com/LS-Ze/gh-proxy" target="_blank">
-                    <img 
-                        src="https://github.githubassets.com/favicons/favicon.svg" 
-                        alt="GitHub Logo"
-                        onerror="this.parentElement.style.background='#00bfb3'"
-                    />
-                </a>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/css/css-Poppins400600.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/css/basic-1765b545.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/css/font_954744_g42joo6uzdr.css"
+    />
+  </head>
+  <body>
+  <div id="he-plugin-simple"></div>
+<script>
+WIDGET = {
+  "CONFIG": {
+    "modules": "01234",
+    "background": "5",
+    "tmpColor": "4A86E8",
+    "tmpSize": "16",
+    "cityColor": "4A86E8",
+    "citySize": "16",
+    "aqiColor": "4A86E8",
+    "aqiSize": "16",
+    "weatherIconSize": "24",
+    "alertIconSize": "18",
+    "padding": "10px 10px 10px 10px",
+    "shadow": "1",
+    "language": "auto",
+    "borderRadius": "5",
+    "fixed": "true",
+    "vertical": "left",
+    "horizontal": "right",
+    "right": "10",
+    "top": "10",
+    "key": "0ab81df2c1134bc5868a61828167daf5"
+  }
+}
+</script>
+<script src="https://widget.qweather.net/simple/static/js/he-simple-common.js?v=2.0"></script>
+	 <img class="mouse" src="https://github.com/favicon.ico" alt="">
+    <main>
+      <section id="hero" class="hero">
+        <div class="hero-content">
+          <div class="hero-header">
+            <div class="-logo">
+              <a href="https://github.com/LS-Ze/gh-proxy"
+                ><img
+                  src="https://github.com/favicon.ico"
+              /></a>
             </div>
-            <a href="https://docker.lsdns.top/" class="docker-btn" target="_blank">Docker代理</a>
-        </div>
-
-        <!-- 核心功能区：恢复彩色文字背景 -->
-        <div class="main">
-            <div class="title-container">
-                <h2 class="title"><div class="jz ys" id="chakhsu"></div></h2>
+            <div class="-cta js--localscroll">
+              <a href="https://docker.lsdns.top/" class="button button--hollow"
+                >docker代理</a
+              >
             </div>
-            <form action="https://github.lsdns.top/" method="get" target="_blank" onsubmit="return toSubmit(event)">
-                <input 
-                    type="text" 
-                    class="url-input" 
-                    name="q" 
-                    placeholder="键入Github文件链接" 
-                    required
-                />
-                <button type="submit" class="download-btn">加速下载</button>
+          </div>
+          <div class="hero-banner">
+            <h4><div class="jz ys" id="chakhsu"></div></h4>
+            <br />
+            <form
+              action="./"
+              method="get"
+              style="padding-bottom: 40px"
+              target="_blank"
+              class="flex"
+              onsubmit="toSubmit(event)"
+            >
+              <label class="block" style="width: fit-content"
+                ><input
+                  class="block url"
+                  name="q"
+                  type="text"
+                  placeholder="键入Github文件链接"
+                  pattern="^((https|http):\/\/)?(github\.com\/.+?\/.+?\/(?:releases|archive|blob|raw|suites)|((?:raw|gist)\.(?:githubusercontent|github)\.com))\/.+$"
+                  required />
+                <div class="bar"></div
+              ></label>
+              <input class="block btn" type="submit" value="下载" />
+              <div class="-cta">
+                <a href="#section1"><i data-feather="arrow-down"></i></a>
+              </div>
             </form>
+          </div>
+          <div class="hero-footer">
+            <div class="-counter">
+              <p><small>Survival Time</small></p>
+              <div id="sitetime" class="time"></div>
+            </div>
+            <div class="-social">
+              <ul>
+                <p></p>
+                <li>
+                  <a href="tencent://Message/?uin=1248683640" class="facebook"
+                    ><i class="zm zm-QQ"></i> <small>Follow us</small></a
+                  >
+                </li>
+                <p></p>
+              </ul>
+            </div>
+          </div>
         </div>
-
-        <!-- 示例说明 -->
-        <div class="examples">
-            <h4>合法输入示例：</h4>
-            <ul>
-                <li>分支源码：https://github.com/LS-Ze/project/archive/master.zip</li>
-                <li>Release文件：https://github.com/LS-Ze/project/releases/download/v0.1.0/example.zip</li>
-                <li>原始文件：https://raw.githubusercontent.com/LS-Ze/project/master/xxx.txt</li>
-            </ul>
-            <p style="margin-top: 10px; color: #666;">提示：仅支持单个文件/压缩包链接，不支持项目文件夹。</p>
+      </section>
+      <section id="section1" class="highlights styled">
+        <hr />
+        <div class="highlights-header">
+          <h6>首页下载</h6>
+          <div
+            class="grids"
+            style="
+              position: relative;
+              height: fit-content;
+              width: fit-content;
+              display: table-cell;
+            "
+          >
+            <div
+              class="grid-item"
+              style="
+                height: fit-content;
+                width: fit-content;
+                display: table-cell;
+              "
+            >
+              <div
+                class="wrap-article"
+                style="
+                  height: fit-content;
+                  width: fit-content;
+                  display: table-cell;
+                "
+              >
+                <p>
+                  在本页地址栏输入合规链接（参考以下链接）点击下载按钮，GitHub文件链接带不带协议头都可以，支持release、archive以及文件，右键复制出来的链接都是符合标准的，注意，不支持项目文件夹
+                </p>
+                <hr />
+                <header>
+                  <h4><b>分支源码</b></h4>
+                </header>
+                <p>https://github.com/LS-Ze/project/archive/master.zip</p>
+                <header>
+                  <h4><b>release源码</b></h4>
+                </header>
+                <p>https://github.com/LS-Ze/project/archive/v0.1.0.tar.gz</p>
+                <header>
+                  <h4><b>release文件</b></h4>
+                </header>
+                <p>
+                  https://github.com/LS-Ze/project/releases/download/v0.1.0/example.zip
+                </p>
+                <header>
+                  <h4><b>分支文件</b></h4>
+                </header>
+                <p>https://github.com/LS-Ze/project/blob/master/filename</p>
+              </div>
+            </div>
+          </div>
         </div>
-
-        <!-- 服务运行时间 -->
-        <div style="text-align: center; margin: 30px 0;">
-            <p>服务运行时长</p>
-            <div id="sitetime" class="time">加载中...</div>
+      </section>
+      <div class="gallery">
+        <div class="gallery-grid">
+          <div
+            class="-image columns large-6 large-offset-1 medium-6 small-12"
+          ></div>
         </div>
-
-        <!-- 页脚 -->
-        <div class="footer">
-            <div>© 2023 保留所有权利</div>
-            <a href="tencent://Message/?uin=1248683640" class="contact" target="_blank">联系开发者</a>
+      </div>
+      <section class="clients styled"><hr class="half" /></section>
+    </main>
+    <footer class="footer styled">
+      <div class="footer-content">
+        <div class="-logo">
+          <a href="https://github.com/LS-Ze/gh-proxy"
+            ><img
+              src="https://github.com/favicon.ico"
+          /></a>
         </div>
-    </div>
-
-    <!-- 4. 音乐小组件：最终修复-加载+显示+尺寸 -->
-    <meting-js 
-        server="netease"
-        type="playlist"
-        id="2440040711"
-        fixed="true"
-        autoplay="false"
-        data-volume="0.35"
-        data-loop="all"
-        mini="true"
-        order="random"
-    ></meting-js>
-
-    <!-- 外部JS：调整音乐播放器加载顺序 -->
-    <script src="https://libs.baidu.com/jquery/1.8.3/jquery.min.js"></script>
-    <script src="https://fastly.jsdelivr.net/npm/aplayer/dist/APlayer.min.js" defer></script>
-    <script src="https://fastly.jsdelivr.net/npm/meting@2.0.1/dist/Meting.min.js" defer></script>
-
-    <!-- 核心脚本：保留所有功能 -->
+        <p class="-copyright">
+          <small
+            >© <time datetime="2023">2023 </time>All rights reserved.</small
+          >
+        </p>
+      </div>
+    </footer>
+		<!-- 音乐播放器 -->
+		<link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/aplayer/dist/APlayer.min.css">
+		<script src="https://fastly.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
+		<script src="https://fastly.jsdelivr.net/npm/meting@2.0.1/dist/Meting.min.js"></script>
+	<meting-js 
+	server="netease"
+	type="playlist"
+	id="2440040711"
+	fixed="true"
+	autoplay="true"
+	data-volume="0.35"
+	data-loop="all"
+	mini="true"
+	order="random"
+	>
+</meting-js>
     <script>
-        $(window).on('load', function() {
-            // 显示鼠标图标
-            const mouseEl = document.getElementById('customMouse');
-            if (mouseEl) {
-                mouseEl.style.opacity = '1';
-                function moveMouse(e) {
-                    const x = e.clientX || (e.touches && e.touches[0].clientX) || 0;
-                    const y = e.clientY || (e.touches && e.touches[0].clientY) || 0;
-                    mouseEl.style.left = x - mouseEl.offsetWidth / 2 + 'px';
-                    mouseEl.style.top = y - mouseEl.offsetHeight / 2 + 'px';
-                }
-                window.addEventListener('mousemove', moveMouse);
-                window.addEventListener('touchmove', moveMouse, { passive: true });
-            }
-
-            // 彩色文字滚动：恢复背景后正常显示
-            var chakhsu = function (r) {
-                function l(t) {
-                    for (var e = document.createDocumentFragment(), r = 0; r < t; r++) {
-                        var c = document.createElement("span");
-                        (c.textContent = String.fromCharCode(94 * Math.random() + 33)),
-                        (c.style.color = b[Math.floor(Math.random() * b.length)]),
-                        e.appendChild(c);
-                    }
-                    return e;
-                }
-                var n = "";
-                (o = ["恭喜你发现了宝藏", "日久见人心"].map(function (t) {
-                    return t + "";
-                })),
-                (a = 2),
-                (g = 1),
-                (s = 5),
-                (d = 75),
-                (b = [
-                    "rgb(110,64,170)", "rgb(150,61,179)", "rgb(191,60,175)", "rgb(228,65,157)", "rgb(254,75,131)",
-                    "rgb(255,94,99)", "rgb(255,120,71)", "rgb(251,150,51)", "rgb(226,183,47)", "rgb(198,214,60)",
-                    "rgb(175,240,91)", "rgb(127,246,88)", "rgb(82,246,103)", "rgb(48,239,130)", "rgb(29,223,163)",
-                    "rgb(26,199,194)", "rgb(35,171,216)", "rgb(54,140,225)", "rgb(76,110,219)", "rgb(96,84,200)"
-                ]),
-                (c = {
-                    text: "",
-                    prefixP: -s,
-                    skillI: 0,
-                    skillP: 0,
-                    direction: "forward",
-                    delay: a,
-                    step: g
-                }),
-                (function t() {
-                    var e = o[c.skillI];
-                    c.step
-                    ? c.step--
-                    : ((c.step = g),
-                    c.prefixP < n.length
-                    ? (0 <= c.prefixP && (c.text += n[c.prefixP]), c.prefixP++)
-                    : "forward" === c.direction
-                    ? c.skillP < e.length
+      var chakhsu = function (r) {
+        function l(t) {
+          for (var e = document.createDocumentFragment(), r = 0; r < t; r++) {
+            var c = document.createElement("span");
+            (c.textContent = String.fromCharCode(94 * Math.random() + 33)),
+              (c.style.color = b[Math.floor(Math.random() * b.length)]),
+              e.appendChild(c);
+          }
+          return e;
+        }
+        var n = "";
+        (o = ["恭喜你发现了宝藏", "日久见人心"].map(function (t) {
+          return t + "";
+        })),
+          (a = 2),
+          (g = 1),
+          (s = 5),
+          (d = 75),
+          (b = [
+            "rgb(110,64,170)",
+            "rgb(150,61,179)",
+            "rgb(191,60,175)",
+            "rgb(228,65,157)",
+            "rgb(254,75,131)",
+            "rgb(255,94,99)",
+            "rgb(255,120,71)",
+            "rgb(251,150,51)",
+            "rgb(226,183,47)",
+            "rgb(198,214,60)",
+            "rgb(175,240,91)",
+            "rgb(127,246,88)",
+            "rgb(82,246,103)",
+            "rgb(48,239,130)",
+            "rgb(29,223,163)",
+            "rgb(26,199,194)",
+            "rgb(35,171,216)",
+            "rgb(54,140,225)",
+            "rgb(76,110,219)",
+            "rgb(96,84,200)"
+          ]),
+          (c = {
+            text: "",
+            prefixP: -s,
+            skillI: 0,
+            skillP: 0,
+            direction: "forward",
+            delay: a,
+            step: g
+          }),
+          (function t() {
+            var e = o[c.skillI];
+            c.step
+              ? c.step--
+              : ((c.step = g),
+                c.prefixP < n.length
+                  ? (0 <= c.prefixP && (c.text += n[c.prefixP]), c.prefixP++)
+                  : "forward" === c.direction
+                  ? c.skillP < e.length
                     ? ((c.text += e[c.skillP]), c.skillP++)
                     : c.delay
                     ? c.delay--
                     : ((c.direction = "backward"), (c.delay = a))
-                    : 0 < c.skillP
-                    ? ((c.text = c.text.slice(0, -1)), c.skillP--)
-                    : ((c.skillI = (c.skillI + 1) % o.length),
+                  : 0 < c.skillP
+                  ? ((c.text = c.text.slice(0, -1)), c.skillP--)
+                  : ((c.skillI = (c.skillI + 1) % o.length),
                     (c.direction = "forward"))),
-                    (r.textContent = c.text),
-                    r.appendChild(
-                        l(
-                            c.prefixP < n.length
-                            ? Math.min(s, s + c.prefixP)
-                            : Math.min(s, e.length - c.skillP)
-                        )
-                    ),
-                    setTimeout(t, d);
-                })();
-            };
-            chakhsu(document.getElementById("chakhsu"));
-
-            // 点击弹出文字
-            var a_idx = 0;
-            const coreValues = ["❤富强❤", "❤民主❤", "❤文明❤", "❤和谐❤", "❤自由❤", "❤平等❤", "❤公正❤", "❤法制❤", "❤爱国❤", "❤敬业❤", "❤诚信❤", "❤友善❤"];
-            $("body").on('click touchstart', function(e) {
-                if (!$(e.target).is('.url-input, .download-btn, a, .mouse')) {
-                    const $i = $("<span style='position:absolute;z-index:9999;font-weight:bold;pointer-events:none;'></span>").text(coreValues[a_idx]);
-                    a_idx = (a_idx + 1) % coreValues.length;
-                    const x = e.pageX || (e.touches && e.touches[0].pageX) || 0;
-                    const y = e.pageY || (e.touches && e.touches[0].pageY) || 0;
-                    $i.css({
-                        "top": y - 20,
-                        "left": x,
-                        "color": `rgb(${~~(255 * Math.random())},${~~(255 * Math.random())},${~~(255 * Math.random())})`
-                    });
-                    $("body").append($i);
-                    $i.animate({ "top": y - 180, "opacity": 0 }, 3000, () => $i.remove());
-                }
-            });
-
-            // 服务运行时间
-            function updateSitetime() {
-                const startTime = new Date('2023-01-01 00:00:00').getTime();
-                const now = new Date().getTime();
-                const diff = now - startTime;
-                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-                document.getElementById('sitetime').textContent = `${days}天 ${hours}时 ${minutes}分 ${seconds}秒`;
-            }
-            updateSitetime();
-            setInterval(updateSitetime, 1000);
-
-            // 音乐小组件加载成功后显示，失败则隐藏
-            if (typeof APlayer !== 'undefined' && typeof MetingJS !== 'undefined') {
-                const player = document.querySelector('meting-js');
-                if (player) player.style.display = 'block';
-            } else {
-                const player = document.querySelector('meting-js');
-                if (player) player.style.display = 'none';
-            }
-        });
-
-        // 表单提交
-        function toSubmit(event) {
-            event.preventDefault();
-            const input = document.querySelector('.url-input');
-            let url = input.value.trim();
-            if (!url.startsWith('http://') && !url.startsWith('https://')) {
-                url = 'https://' + url;
-                input.value = url;
-            }
-            event.target.submit();
-            return true;
-        }
+              (r.textContent = c.text),
+              r.appendChild(
+                l(
+                  c.prefixP < n.length
+                    ? Math.min(s, s + c.prefixP)
+                    : Math.min(s, e.length - c.skillP)
+                )
+              ),
+              setTimeout(t, d);
+          })();
+      };
+      chakhsu(document.getElementById("chakhsu"));
     </script>
-</body>
+    <script
+      type="text/javascript"
+      src="https://libs.baidu.com/jquery/1.8.3/jquery.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="https://libs.baidu.com/jquery/1.8.3/jquery.min.js"
+    ></script>
+    <script
+      data-cfasync="false"
+      src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/email-decode.min.js"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/jquery-59e367f0.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/threejs-6ebcc050.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/projector-2f448d36.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/canvasrenderer-0792e9f3.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/feather-cae18e22.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/imagesloaded-566550fd.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/jquery-countdown-38fb1392.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/jquery-scrollto-94f5d0cb.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/jquery-localscroll-640631e1.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/packery-8c62b54b.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/magnific-popup-c9f972e2.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/slick-carousel-3b41b3bc.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/sphere-dark-16cf345f.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/main-d441790e.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/basic-9ff86e20.js"></script>
+    <script src="https://fastly.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/wikisj.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/xuehua.js"></script>
+	 <script type="text/javascript">
+	 /* 鼠标特效 */
+var a_idx = 0;
+jQuery(document)
+	.ready(function($) {
+		$("body")
+			.click(function(e) {
+				var a = new Array("❤富强❤", "❤民主❤", "❤文明❤", "❤和谐❤", "❤自由❤", "❤平等❤", "❤公正❤", "❤法制❤", "❤爱国❤", "❤敬业❤", "❤诚信❤", "❤友善❤");
+				var $i = $("<span></span>")
+					.text(a[a_idx]);
+				a_idx = (a_idx + 1) % a.length;
+				var x = e.pageX,
+					y = e.pageY;
+				$i.css({
+					"z-index": 999999999999999999999999999999999999999999999999999999999999999999999,
+					"top": y - 20,
+					"left": x,
+					"position": "absolute",
+					"font-weight": "bold",
+					"color": "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+				});
+				$("body")
+					.append($i);
+				$i.animate({
+						"top": y - 180,
+						"opacity": 0
+					},
+					3000,
+					function() {
+						$i.remove();
+					});
+			});
+	});
+	 </script>
+	 <script>
+	 var mouse = document.querySelector('.mouse');
+	 window.addEventListener('mousemove', function(event) {
+	 	mouse.style.left = event.clientX - mouse.offsetWidth / 2 + 'px';
+	 	mouse.style.top = event.clientY - mouse.offsetHeight / 2 + 'px';
+	 })
+	 </script>
+  </body>
 </html>
+"));
+</script></html>

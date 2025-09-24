@@ -10,7 +10,6 @@
     <meta name="keywords" content="GitHub,GitHub文件加速,GitHub代理" />
     <meta name="theme-color" content="#00C66B" />
 
-    <!-- 保留核心样式 -->
     <style>
         * {
             margin: 0;
@@ -18,17 +17,19 @@
             box-sizing: border-box;
         }
         body {
-            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             padding: 20px;
             min-height: 100vh;
             background: #fff;
             display: flex;
             flex-direction: column;
             align-items: center;
+            position: relative; /* 用于绝对定位元素 */
         }
         .container {
             width: 100%;
             max-width: 500px;
+            z-index: 1; /* 确保主内容在最上层 */
         }
         .header {
             display: flex;
@@ -65,6 +66,7 @@
             font-size: 24px;
             color: #333;
             margin-bottom: 20px;
+            text-align: center;
         }
         .url-input {
             width: 100%;
@@ -122,7 +124,7 @@
             color: #00bfb3;
             text-decoration: none;
         }
-        /* 鼠标图标修复：尺寸+定位+加载降级 */
+        /* 鼠标图标：尺寸+定位+加载降级 */
         .mouse {
             width: 32px;
             height: 32px;
@@ -135,24 +137,27 @@
             transition: transform 0.05s, opacity 0.2s;
             opacity: 0;
         }
-        /* 小组件层级修复：避免遮挡 */
+        /* 天气小组件：层级+加载降级 */
         #he-plugin-simple {
             z-index: 9997 !important;
             position: fixed !important;
             top: 10px !important;
             right: 10px !important;
+            display: none; /* 初始隐藏，加载成功后显示 */
         }
+        /* 音乐小组件：层级+加载降级 */
         meting-js {
             position: fixed !important;
             bottom: 10px !important;
             left: 50% !important;
             transform: translateX(-50%) !important;
             z-index: 9996 !important;
+            display: none; /* 初始隐藏，加载成功后显示 */
         }
     </style>
 </head>
 <body>
-    <!-- 1. 天气小组件：修复加载+降级 -->
+    <!-- 1. 天气小组件：修复加载+显示 -->
     <div id="he-plugin-simple"></div>
     <script>
         WIDGET = {
@@ -181,19 +186,21 @@
         }
     </script>
     <script>
-        // 加载失败自动隐藏
+        // 加载成功后显示，失败则隐藏
+        window.addEventListener('load', function() {
+            const weather = document.getElementById('he-plugin-simple');
+            if (weather) weather.style.display = 'block';
+        });
         window.addEventListener('error', function(e) {
             if (e.target.src && e.target.src.includes('widget.qweather.net')) {
-                setTimeout(() => {
-                    const weather = document.getElementById('he-plugin-simple');
-                    if (weather) weather.style.display = 'none';
-                }, 1000);
+                const weather = document.getElementById('he-plugin-simple');
+                if (weather) weather.style.display = 'none';
             }
         }, true);
     </script>
     <script src="https://widget.qweather.net/simple/static/js/he-simple-common.js?v=2.0" defer></script>
 
-    <!-- 2. 鼠标图标：修复加载+尺寸 -->
+    <!-- 2. 鼠标图标：修复加载+显示 -->
     <img 
         class="mouse" 
         src="https://github.githubassets.com/favicons/favicon.svg" 
@@ -203,7 +210,7 @@
     />
 
     <div class="container">
-        <!-- 3. Logo：修复加载+尺寸 -->
+        <!-- 3. Logo：修复加载+显示 -->
         <div class="header">
             <div class="logo">
                 <a href="https://github.com/LS-Ze/gh-proxy" target="_blank">
@@ -256,7 +263,7 @@
         </div>
     </div>
 
-    <!-- 4. 音乐小组件：修复加载+降级 -->
+    <!-- 4. 音乐小组件：修复加载+显示 -->
     <meting-js 
         server="netease"
         type="playlist"
@@ -388,10 +395,10 @@
             updateSitetime();
             setInterval(updateSitetime, 1000);
 
-            // 音乐小组件加载失败降级
-            if (typeof APlayer === 'undefined') {
+            // 音乐小组件加载成功后显示
+            if (typeof APlayer !== 'undefined') {
                 const player = document.querySelector('meting-js');
-                if (player) player.style.display = 'none';
+                if (player) player.style.display = 'block';
             }
         });
 

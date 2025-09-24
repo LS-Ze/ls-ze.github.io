@@ -13,19 +13,19 @@
     <meta name="keywords" content="GitHub,GitHub文件加速,GitHub代理" />
     <meta name="theme-color" content="#00C66B" />
 
-    <!-- 整合CSS：保留所有样式，修复布局异常，统一变量 -->
+    <!-- 整合CSS：保留所有样式，修复布局异常 -->
     <style>
         :root {
-            --primary: #00bfb3; /* 主色：统一按钮/下划线颜色 */
-            --text-secondary: #7b7b7b; /* 次要文字色 */
-            --border-light: #bfbfbf; /* 浅色边框 */
+            --primary: #00bfb3;
+            --text-secondary: #7b7b7b;
+            --border-light: #bfbfbf;
         }
 
         body, html {
             width: 100%;
             margin: 0;
-            cursor: none; /* 隐藏默认鼠标 */
-            font-family: 'Poppins', sans-serif; /* 统一字体 */
+            cursor: none;
+            font-family: 'Poppins', sans-serif;
         }
 
         html {
@@ -40,30 +40,30 @@
 
         p {
             word-break: break-all;
-            line-height: 1.6; /* 优化文字可读性 */
+            line-height: 1.6;
         }
 
-        /* 响应式修复：移动端标题间距+示例区左间距 */
+        /* 响应式修复：移动端适配 */
         @media (max-width: 500px) {
             h1, .hero-banner h4 {
-                margin-top: 40px !important; /* 修复原80px过大问题 */
+                margin-top: 40px !important;
             }
             .example, .tips {
-                margin-left: 1.5em !important; /* 修复移动端左间距溢出 */
+                margin-left: 1.5em !important;
             }
             .hero-header {
                 flex-direction: column;
-                gap: 15px; /* 移动端Logo与Docker按钮垂直排列 */
+                gap: 15px;
+                align-items: flex-start !important;
             }
         }
 
-        /* 弹性布局：保留原逻辑，统一间距 */
         .flex {
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            gap: 15px; /* 统一子元素间距 */
+            gap: 15px;
         }
 
         .block {
@@ -71,12 +71,11 @@
             position: relative;
         }
 
-        /* 输入框样式：保留下划线动画 */
         .url {
             font-size: 18px;
             padding: 10px 10px 10px 5px;
             width: 300px;
-            max-width: 90%; /* 移动端自适应宽度 */
+            max-width: 90%;
             border: none;
             border-bottom: 1px solid var(--border-light);
             background: transparent;
@@ -86,7 +85,6 @@
             outline: 0;
         }
 
-        /* 输入框下划线动画：保留原过渡效果 */
         .bar {
             content: "";
             height: 2px;
@@ -96,8 +94,6 @@
             position: absolute;
             background: var(--primary);
             transition: 0.2s ease transform;
-            -moz-transition: 0.2s ease transform;
-            -webkit-transition: 0.2s ease transform;
             transform: scaleX(0);
         }
 
@@ -105,7 +101,6 @@
             transform: scaleX(1);
         }
 
-        /* 按钮样式：保留原尺寸，添加hover反馈 */
         .btn {
             line-height: 38px;
             background-color: var(--primary);
@@ -119,21 +114,20 @@
             padding: 5px;
             width: 160px;
             margin: 30px 0;
-            transition: background 0.2s; /* 新增hover过渡 */
+            transition: background 0.2s;
         }
 
         .btn:hover {
-            background-color: #00a89f; /* 加深主色，提升交互感 */
+            background-color: #00a89f;
         }
 
-        /* 示例与提示区：修复布局异常，保留原定位 */
         .example, .tips {
             color: var(--text-secondary);
             position: relative;
             align-self: flex-start;
             margin-left: 7.5em;
             width: 100%;
-            max-width: 600px; /* 限制最大宽度，避免文字过宽 */
+            max-width: 600px;
         }
 
         .tips > p:first-child::before {
@@ -150,20 +144,21 @@
             color: var(--text-secondary);
         }
 
-        /* 鼠标图标：保留原尺寸，优化初始位置 */
+        /* 鼠标图标：修复初始位置，确保JS加载前不异常显示 */
         .mouse {
             width: 50px;
             height: 50px;
             border-radius: 50%;
             position: fixed;
-            left: -100px; /* 修复原-200px过偏问题 */
+            left: -100px;
             top: 0;
-            z-index: 9999; /* 提升层级，避免被遮挡 */
+            z-index: 9999;
             pointer-events: none;
-            transition: transform 0.05s; /* 平滑跟随 */
+            transition: transform 0.05s;
+            opacity: 0; /* 初始透明，JS加载后显示 */
         }
 
-        /* 头部导航：修复Logo与按钮对齐 */
+        /* 头部导航：修复对齐 */
         .hero-header {
             display: flex;
             justify-content: space-between;
@@ -191,7 +186,7 @@
             background-color: rgba(0, 191, 179, 0.1);
         }
 
-        /* 文字滚动容器：确保居中显示 */
+        /* 文字滚动容器：确保居中 */
         .hero-banner {
             display: flex;
             flex-direction: column;
@@ -205,7 +200,7 @@
             color: #333;
         }
 
-        /* 服务运行时间：美化显示 */
+        /* 服务运行时间：美化 */
         .time {
             font-size: 16px;
             color: var(--primary);
@@ -219,15 +214,17 @@
             padding: 20px 0;
             margin-top: 30px;
             border-top: 1px solid var(--border-light);
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
-        /* 示例区布局：修复原table-cell导致的内容挤压 */
+        /* 示例区：修复原table-cell布局挤压 */
         .highlights-header {
             padding: 20px 0;
         }
 
         .grids, .grid-item, .wrap-article {
-            display: block !important; /* 取消原table-cell，改为块级布局 */
+            display: block !important;
             width: 100% !important;
             height: auto !important;
         }
@@ -237,13 +234,15 @@
             color: #333;
         }
 
-        /* 页脚：确保居中 */
+        /* 页脚：确保响应式 */
         .footer-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 20px 0;
             border-top: 1px solid var(--border-light);
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .-copyright {
@@ -251,25 +250,30 @@
             font-size: 14px;
         }
 
-        /* 点击文字特效：保留原样式，优化z-index */
+        /* 点击文字特效：保留原样式 */
         .click-effect {
             position: absolute;
             font-weight: bold;
             z-index: 9999;
             pointer-events: none;
         }
+
+        /* 天气插件加载失败降级：隐藏空白容器 */
+        #he-plugin-simple {
+            z-index: 9998 !important; /* 避免遮挡鼠标图标 */
+        }
     </style>
 
-    <!-- 保留所有外部CSS：按原顺序引入，添加延迟加载 -->
+    <!-- 保留所有外部CSS：按原顺序引入 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/css/css-PlayfairDisplay.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/css/css-Poppins400600.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/css/basic-1765b545.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/css/font_954744_g42joo6uzdr.css" />
-    <!-- 音乐播放器CSS：保留 -->
+    <!-- 音乐播放器CSS -->
     <link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" />
 </head>
 <body>
-    <!-- 天气插件：保留原配置 -->
+    <!-- 天气插件：保留原配置，添加加载失败隐藏 -->
     <div id="he-plugin-simple"></div>
     <script>
         WIDGET = {
@@ -297,43 +301,56 @@
             }
         }
     </script>
+    <script>
+        // 天气插件加载失败降级
+        window.addEventListener('error', function(e) {
+            if (e.target.src && e.target.src.includes('widget.qweather.net')) {
+                document.getElementById('he-plugin-simple').style.display = 'none';
+            }
+        }, true);
+    </script>
     <script src="https://widget.qweather.net/simple/static/js/he-simple-common.js?v=2.0" defer></script>
 
-    <!-- 鼠标跟随图标：保留原图标，添加加载降级 -->
+    <!-- 鼠标跟随图标：修复加载降级，JS加载后显示 -->
     <img 
         class="mouse" 
         src="https://github.com/favicon.ico" 
         alt="自定义鼠标"
         onerror="this.style.background='#00bfb3'; this.src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='"
+        id="customMouse"
     />
 
     <main>
         <section id="hero" class="hero">
             <div class="hero-content">
-                <!-- 头部：Logo + Docker代理链接，保留原跳转 -->
+                <!-- 头部：Logo + Docker代理，修复链接target -->
                 <div class="hero-header">
                     <div class="-logo">
-                        <a href="https://github.com/LS-Ze/gh-proxy" target="_blank">
-                            <img src="https://github.com/favicon.ico" alt="GitHub Logo" onerror="this.style.background='#000'; this.width=32; this.height=32" />
+                        <a href="https://github.com/LS-Ze/gh-proxy" target="_blank" rel="noopener">
+                            <img 
+                                src="https://github.com/favicon.ico" 
+                                alt="GitHub Logo"
+                                onerror="this.style.background='#000'; this.width=32; this.height=32"
+                            />
                         </a>
                     </div>
                     <div class="-cta js--localscroll">
-                        <a href="https://docker.lsdns.top/" class="button button--hollow" target="_blank">docker代理</a>
+                        <a href="https://docker.lsdns.top/" class="button button--hollow" target="_blank" rel="noopener">docker代理</a>
                     </div>
                 </div>
 
-                <!-- 核心区域：文字滚动 + 表单，修复表单提交逻辑 -->
+                <!-- 核心区域：修复表单提交逻辑，Feather图标闭合 -->
                 <div class="hero-banner">
                     <h4><div class="jz ys" id="chakhsu"></div></h4>
                     <br />
-                    <!-- 表单：补全toSubmit函数，修复提交逻辑 -->
                     <form
-                        action="https://github.lsdns.top/" <!-- 改为实际加速服务地址，原./无效 -->
+                        action="https://github.lsdns.top/" <!-- 若此地址无效，替换为实际加速服务地址 -->
                         method="get"
                         style="padding-bottom: 40px; width: 100%; max-width: 400px;"
                         target="_blank"
                         class="flex"
                         onsubmit="return toSubmit(event)"
+                        id="downloadForm"
                     >
                         <label class="block" style="width: 100%;">
                             <input
@@ -343,18 +360,19 @@
                                 placeholder="键入Github文件链接"
                                 pattern="^((https|http):\/\/)?(github\.com\/.+?\/.+?\/(?:releases|archive|blob|raw|suites)|((?:raw|gist)\.(?:githubusercontent|github)\.com))\/.+$"
                                 required 
+                                id="githubUrl"
                             />
                             <div class="bar"></div>
                         </label>
                         <input class="block btn" type="submit" value="下载" />
-                        <!-- Feather图标：补全初始化，确保箭头显示 -->
+                        <!-- 修复Feather图标闭合标签 -->
                         <div class="-cta">
-                            <a href="#section1"><<i data-feather="arrow-down"></</i></a>
+                            <a href="#section1"><<<i data-feather="arrow-down"></</</i></a>
                         </div>
                     </form>
                 </div>
 
-                <!-- 服务运行时间：实现原缺失的计算逻辑 -->
+                <!-- 服务运行时间：修复显示 -->
                 <div class="hero-footer">
                     <div class="-counter">
                         <p><small>Survival Time</small></p>
@@ -363,8 +381,9 @@
                     <div class="-social">
                         <ul>
                             <li>
-                                <a href="tencent://Message/?uin=1248683640" class="facebook" target="_blank">
-                                    <<i class="zm zm-QQ"></</i> <small>Follow us</small>
+                                <!-- 修复QQ图标标签闭合 -->
+                                <a href="tencent://Message/?uin=1248683640" class="facebook" target="_blank" rel="noopener">
+                                    <<<i class="zm zm-QQ"></</</i> <small>Follow us</small>
                                 </a>
                             </li>
                         </ul>
@@ -373,7 +392,7 @@
             </div>
         </section>
 
-        <!-- 示例说明区：保留所有内容，修复布局挤压 -->
+        <!-- 示例说明区：保留所有内容 -->
         <section id="section1" class="highlights styled">
             <hr />
             <div class="highlights-header">
@@ -409,7 +428,7 @@
             </div>
         </section>
 
-        <!-- 保留原空gallery区域（用户要求不删减） -->
+        <!-- 保留原空gallery区域 -->
         <div class="gallery">
             <div class="gallery-grid">
                 <div class="-image columns large-6 large-offset-1 medium-6 small-12"></div>
@@ -419,12 +438,16 @@
         <section class="clients styled"><hr class="half" /></section>
     </main>
 
-    <!-- 页脚：保留原版权信息 -->
+    <!-- 页脚：保留原版权 -->
     <footer class="footer styled">
         <div class="footer-content">
             <div class="-logo">
-                <a href="https://github.com/LS-Ze/gh-proxy" target="_blank">
-                    <img src="https://github.com/favicon.ico" alt="GitHub Logo" onerror="this.style.background='#000'; this.width=24; this.height=24" />
+                <a href="https://github.com/LS-Ze/gh-proxy" target="_blank" rel="noopener">
+                    <img 
+                        src="https://github.com/favicon.ico" 
+                        alt="GitHub Logo"
+                        onerror="this.style.background='#000'; this.width=24; this.height=24"
+                    />
                 </a>
             </div>
             <p class="-copyright">
@@ -433,27 +456,31 @@
         </div>
     </footer>
 
-    <!-- 音乐播放器：保留原配置，关闭自动播放（避免干扰） -->
+    <!-- 音乐播放器：保留原配置，修复加载顺序 -->
     <meting-js 
         server="netease"
         type="playlist"
         id="2440040711"
         fixed="true"
-        autoplay="false" <!-- 原autoplay=true改为false，提升体验 -->
+        autoplay="false" <!-- 避免自动播放干扰 -->
         data-volume="0.35"
         data-loop="all"
         mini="true"
         order="random"
+        id="musicPlayer"
     ></meting-js>
 
-    <!-- 保留所有外部JS：删除重复jQuery，调整执行顺序 -->
-    <script src="https://libs.baidu.com/jquery/1.8.3/jquery.min.js"></script> <!-- 只保留min版，删除重复引用 -->
+    <!-- 外部JS：修复加载顺序，删除重复jQuery -->
+    <!-- 1. 优先加载jQuery（所有jQuery插件依赖） -->
+    <script src="https://libs.baidu.com/jquery/1.8.3/jquery.min.js"></script>
+    <!-- 2. Feather图标（箭头图标依赖） -->
+    <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/feather-cae18e22.js"></script>
+    <!-- 3. 其他插件：按依赖顺序加载 -->
     <script data-cfasync="false" src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/email-decode.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/jquery-59e367f0.js" defer></script>
     <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/threejs-6ebcc050.js" defer></script>
     <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/projector-2f448d36.js" defer></script>
     <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/canvasrenderer-0792e9f3.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/feather-cae18e22.js"></script> <!-- Feather图标初始化依赖 -->
     <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/imagesloaded-566550fd.js" defer></script>
     <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/jquery-countdown-38fb1392.js" defer></script>
     <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/jquery-scrollto-94f5d0cb.js" defer></script>
@@ -466,116 +493,123 @@
     <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/basic-9ff86e20.js" defer></script>
     <script src="https://fastly.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/wikisj.js" defer></script>
     <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/xuehua.js" defer></script>
-    <!-- 音乐播放器JS：保留 -->
+    <!-- 4. 音乐播放器JS：最后加载 -->
     <script src="https://fastly.jsdelivr.net/npm/aplayer/dist/APlayer.min.js" defer></script>
     <script src="https://fastly.jsdelivr.net/npm/meting@2.0.1/dist/Meting.min.js" defer></script>
 
-    <!-- 核心功能脚本：保留所有交互逻辑，修复缺失函数 -->
+    <!-- 核心功能脚本：修复事件顺序，确保所有功能生效 -->
     <script>
-        // 1. 彩色文字滚动效果（保留原逻辑）
-        var chakhsu = function (r) {
-            function l(t) {
-                for (var e = document.createDocumentFragment(), r = 0; r < t; r++) {
-                    var c = document.createElement("span");
-                    (c.textContent = String.fromCharCode(94 * Math.random() + 33)),
-                    (c.style.color = b[Math.floor(Math.random() * b.length)]),
-                    e.appendChild(c);
+        // 等待所有DOM和资源加载完成
+        $(window).on('load', function() {
+            // 1. 显示鼠标图标
+            $('#customMouse').css('opacity', '1');
+
+            // 2. 彩色文字滚动（保留原逻辑）
+            var chakhsu = function (r) {
+                function l(t) {
+                    for (var e = document.createDocumentFragment(), r = 0; r < t; r++) {
+                        var c = document.createElement("span");
+                        (c.textContent = String.fromCharCode(94 * Math.random() + 33)),
+                        (c.style.color = b[Math.floor(Math.random() * b.length)]),
+                        e.appendChild(c);
+                    }
+                    return e;
                 }
-                return e;
-            }
-            var n = "";
-            (o = ["恭喜你发现了宝藏", "日久见人心"].map(function (t) {
-                return t + "";
-            })),
-            (a = 2),
-            (g = 1),
-            (s = 5),
-            (d = 75),
-            (b = [
-                "rgb(110,64,170)", "rgb(150,61,179)", "rgb(191,60,175)", "rgb(228,65,157)", "rgb(254,75,131)",
-                "rgb(255,94,99)", "rgb(255,120,71)", "rgb(251,150,51)", "rgb(226,183,47)", "rgb(198,214,60)",
-                "rgb(175,240,91)", "rgb(127,246,88)", "rgb(82,246,103)", "rgb(48,239,130)", "rgb(29,223,163)",
-                "rgb(26,199,194)", "rgb(35,171,216)", "rgb(54,140,225)", "rgb(76,110,219)", "rgb(96,84,200)"
-            ]),
-            (c = {
-                text: "",
-                prefixP: -s,
-                skillI: 0,
-                skillP: 0,
-                direction: "forward",
-                delay: a,
-                step: g
-            }),
-            (function t() {
-                var e = o[c.skillI];
-                c.step
-                ? c.step--
-                : ((c.step = g),
-                c.prefixP < n.length
-                ? (0 <= c.prefixP && (c.text += n[c.prefixP]), c.prefixP++)
-                : "forward" === c.direction
-                ? c.skillP < e.length
-                ? ((c.text += e[c.skillP]), c.skillP++)
-                : c.delay
-                ? c.delay--
-                : ((c.direction = "backward"), (c.delay = a))
-                : 0 < c.skillP
-                ? ((c.text = c.text.slice(0, -1)), c.skillP--)
-                : ((c.skillI = (c.skillI + 1) % o.length),
-                (c.direction = "forward"))),
-                (r.textContent = c.text),
-                r.appendChild(
-                    l(
-                        c.prefixP < n.length
-                        ? Math.min(s, s + c.prefixP)
-                        : Math.min(s, e.length - c.skillP)
-                    )
-                ),
-                setTimeout(t, d);
-            })();
-        };
-        // 初始化文字滚动（DOM加载后执行）
-        $(document).ready(function() {
+                var n = "";
+                (o = ["恭喜你发现了宝藏", "日久见人心"].map(function (t) {
+                    return t + "";
+                })),
+                (a = 2),
+                (g = 1),
+                (s = 5),
+                (d = 75),
+                (b = [
+                    "rgb(110,64,170)", "rgb(150,61,179)", "rgb(191,60,175)", "rgb(228,65,157)", "rgb(254,75,131)",
+                    "rgb(255,94,99)", "rgb(255,120,71)", "rgb(251,150,51)", "rgb(226,183,47)", "rgb(198,214,60)",
+                    "rgb(175,240,91)", "rgb(127,246,88)", "rgb(82,246,103)", "rgb(48,239,130)", "rgb(29,223,163)",
+                    "rgb(26,199,194)", "rgb(35,171,216)", "rgb(54,140,225)", "rgb(76,110,219)", "rgb(96,84,200)"
+                ]),
+                (c = {
+                    text: "",
+                    prefixP: -s,
+                    skillI: 0,
+                    skillP: 0,
+                    direction: "forward",
+                    delay: a,
+                    step: g
+                }),
+                (function t() {
+                    var e = o[c.skillI];
+                    c.step
+                    ? c.step--
+                    : ((c.step = g),
+                    c.prefixP < n.length
+                    ? (0 <= c.prefixP && (c.text += n[c.prefixP]), c.prefixP++)
+                    : "forward" === c.direction
+                    ? c.skillP < e.length
+                    ? ((c.text += e[c.skillP]), c.skillP++)
+                    : c.delay
+                    ? c.delay--
+                    : ((c.direction = "backward"), (c.delay = a))
+                    : 0 < c.skillP
+                    ? ((c.text = c.text.slice(0, -1)), c.skillP--)
+                    : ((c.skillI = (c.skillI + 1) % o.length),
+                    (c.direction = "forward"))),
+                    (r.textContent = c.text),
+                    r.appendChild(
+                        l(
+                            c.prefixP < n.length
+                            ? Math.min(s, s + c.prefixP)
+                            : Math.min(s, e.length - c.skillP)
+                        )
+                    ),
+                    setTimeout(t, d);
+                })();
+            };
             chakhsu(document.getElementById("chakhsu"));
-            
-            // 2. 点击弹出社会主义核心价值观（保留原逻辑）
+
+            // 3. 点击弹出核心价值观（修复事件绑定）
             var a_idx = 0;
-            $("body").click(function(e) {
-                var a = ["❤富强❤", "❤民主❤", "❤文明❤", "❤和谐❤", "❤自由❤", "❤平等❤", "❤公正❤", "❤法制❤", "❤爱国❤", "❤敬业❤", "❤诚信❤", "❤友善❤"];
-                var $i = $("<span class='click-effect'></span>").text(a[a_idx]);
-                a_idx = (a_idx + 1) % a.length;
-                var x = e.pageX, y = e.pageY;
-                $i.css({
-                    "z-index": 9999,
-                    "top": y - 20,
-                    "left": x,
-                    "position": "absolute",
-                    "font-weight": "bold",
-                    "color": "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
-                });
-                $("body").append($i);
-                $i.animate({
-                    "top": y - 180,
-                    "opacity": 0
-                }, 3000, function() {
-                    $i.remove();
-                });
+            $("body").off('click').on('click', function(e) {
+                // 排除表单和按钮，避免重复触发
+                if (!$(e.target).is('#githubUrl, .btn, a')) {
+                    var a = ["❤富强❤", "❤民主❤", "❤文明❤", "❤和谐❤", "❤自由❤", "❤平等❤", "❤公正❤", "❤法制❤", "❤爱国❤", "❤敬业❤", "❤诚信❤", "❤友善❤"];
+                    var $i = $("<span class='click-effect'></span>").text(a[a_idx]);
+                    a_idx = (a_idx + 1) % a.length;
+                    var x = e.pageX, y = e.pageY;
+                    $i.css({
+                        "z-index": 9999,
+                        "top": y - 20,
+                        "left": x,
+                        "position": "absolute",
+                        "font-weight": "bold",
+                        "color": "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+                    });
+                    $("body").append($i);
+                    $i.animate({
+                        "top": y - 180,
+                        "opacity": 0
+                    }, 3000, function() {
+                        $i.remove();
+                    });
+                }
             });
 
-            // 3. 鼠标跟随（保留原逻辑，优化性能）
-            var mouse = document.querySelector('.mouse');
+            // 4. 鼠标跟随（修复事件绑定）
+            var mouse = document.getElementById('customMouse');
             window.addEventListener('mousemove', function(event) {
-                mouse.style.left = event.clientX - mouse.offsetWidth / 2 + 'px';
-                mouse.style.top = event.clientY - mouse.offsetHeight / 2 + 'px';
+                if (mouse) {
+                    mouse.style.left = event.clientX - mouse.offsetWidth / 2 + 'px';
+                    mouse.style.top = event.clientY - mouse.offsetHeight / 2 + 'px';
+                }
             });
 
-            // 4. Feather图标初始化（修复原缺失的箭头图标）
+            // 5. Feather图标初始化（确保箭头显示）
             feather.replace();
 
-            // 5. 服务运行时间计算（实现原缺失功能）
+            // 6. 服务运行时间计算（修复显示）
             function updateSitetime() {
-                // 假设服务启动时间为2023-01-01（可根据实际修改）
-                var startTime = new Date('2023-01-01 00:00:00').getTime();
+                var startTime = new Date('2023-01-01 00:00:00').getTime(); // 替换为实际启动时间
                 var now = new Date().getTime();
                 var diff = now - startTime;
                 var days = Math.floor(diff / (1000 * 60 * 60 * 24));
@@ -586,20 +620,25 @@
             }
             updateSitetime();
             setInterval(updateSitetime, 1000);
+
+            // 7. 音乐播放器加载失败降级
+            if (!window.APlayer) {
+                document.getElementById('musicPlayer').style.display = 'none';
+            }
         });
 
-        // 6. 表单提交函数（补全原缺失逻辑，自动补全协议）
+        // 8. 表单提交函数（修复协议补全，确保不阻断提交）
         function toSubmit(event) {
             event.preventDefault();
-            var input = event.target.querySelector('input[name="q"]');
+            var input = document.getElementById('githubUrl');
             var url = input.value.trim();
-            // 补全http/https协议（用户输入无协议时）
+            // 补全协议
             if (!url.startsWith('http://') && !url.startsWith('https://')) {
                 url = 'https://' + url;
                 input.value = url;
             }
             // 提交表单
-            event.target.submit();
+            document.getElementById('downloadForm').submit();
             return true;
         }
     </script>

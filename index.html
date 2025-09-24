@@ -2,10 +2,9 @@
 <html lang="zh-Hans">
 <head>
     <meta charset="utf-8" />
-    <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <title>LSDNS-GitHub 文件加速</title>
     <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no" />
-    <!-- 图标资源：GitHub图标 + 加载降级 -->
+    <title>LSDNS-GitHub 文件加速</title>
+    <!-- 图标资源：保留GitHub图标 + 降级 -->
     <link rel="icon" href="https://github.com/favicon.ico" onerror="this.href='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='" />
     <link rel="apple-touch-icon" href="https://github.com/favicon.ico" onerror="this.href='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='" />
     <meta name="author" content="Aether-Themes" />
@@ -13,15 +12,25 @@
     <meta name="keywords" content="GitHub,GitHub文件加速,GitHub代理" />
     <meta name="theme-color" content="#00C66B" />
 
-    <!-- 整合CSS：修复响应式，统一移动端布局 -->
+    <!-- 保留所有外部CSS：按原顺序引入 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/css/css-PlayfairDisplay.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/css/css-Poppins400600.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/css/basic-1765b545.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/css/font_954744_g42joo6uzdr.css" />
+    <!-- 音乐播放器CSS -->
+    <link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" />
+
+    <!-- 核心CSS：修复布局 + 移动端适配，不删减任何样式功能 -->
     <style>
         :root {
             --primary: #00bfb3;
             --text-secondary: #7b7b7b;
             --border-light: #bfbfbf;
+            --spacing-xs: 4px;
             --spacing-sm: 8px;
             --spacing-md: 16px;
             --spacing-lg: 24px;
+            --spacing-xl: 32px;
         }
 
         * {
@@ -33,14 +42,14 @@
         body, html {
             width: 100%;
             min-height: 100vh;
-            cursor: none;
+            cursor: none; /* 保留隐藏默认鼠标 */
             font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
             line-height: 1.6;
+            background-color: #fff;
         }
 
         body {
             padding: var(--spacing-md);
-            background-color: #fff;
         }
 
         p {
@@ -48,32 +57,48 @@
             color: var(--text-secondary);
         }
 
-        /* 响应式核心：流式布局 + 移动端适配 */
+        /* 响应式核心：适配所有屏幕，不删减任何模块 */
         @media (max-width: 768px) {
-            .hero-header, .hero-footer, .footer-content {
+            /* 头部/底部垂直排列，避免挤压 */
+            .hero-header, .hero-footer, .footer-content, .highlights-header {
                 flex-direction: column;
                 align-items: flex-start;
                 gap: var(--spacing-md);
             }
+            /* 示例区左间距适配，避免溢出 */
             .example, .tips {
                 margin-left: var(--spacing-md) !important;
             }
+            /* 输入框/按钮占满宽度，便于触摸 */
             .url {
-                max-width: 100%;
+                width: 100% !important;
+                max-width: 100% !important;
             }
             .btn {
-                width: 100%;
-                max-width: 200px;
+                width: 100% !important;
+                max-width: 220px !important;
+            }
+            /* 文字滚动区域居中，提升可读性 */
+            .hero-banner h4 {
+                font-size: clamp(16px, 3vw, 20px) !important;
+                text-align: center;
+            }
+            /* 示例链接字体缩小，避免换行挤压 */
+            .wrap-article p {
+                font-size: 14px !important;
             }
         }
 
-        /* 弹性布局工具类 */
+        /* 保留原弹性布局工具类 */
         .flex {
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             gap: var(--spacing-md);
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
         .block {
@@ -82,19 +107,20 @@
             width: 100%;
         }
 
-        /* 输入框：下划线动画 + 响应式宽度 */
+        /* 输入框：保留下划线动画，修复宽度 */
         .url {
-            font-size: 16px;
+            font-size: 18px;
             padding: 12px 10px;
+            position: relative;
+            width: 300px;
             border: none;
             border-bottom: 1px solid var(--border-light);
             background: transparent;
             transition: border-color 0.2s;
         }
 
-        .url:focus {
-            outline: none;
-            border-color: var(--primary);
+        input:focus {
+            outline: 0;
         }
 
         .bar {
@@ -105,24 +131,28 @@
             left: 0;
             position: absolute;
             background: var(--primary);
+            transition: 0.2s ease transform;
             transform: scaleX(0);
-            transition: transform 0.2s ease;
         }
 
         .url:focus ~ .bar {
             transform: scaleX(1);
         }
 
-        /* 按钮： hover反馈 + 响应式宽度 */
+        /* 按钮：保留原样式 + 触摸反馈 */
         .btn {
-            line-height: 40px;
+            line-height: 38px;
             background-color: var(--primary);
             color: #fff;
+            white-space: nowrap;
             text-align: center;
-            font-size: 15px;
+            font-size: 14px;
             border: none;
-            border-radius: 4px;
+            border-radius: 2px;
             cursor: pointer;
+            padding: 5px;
+            width: 160px;
+            margin: 30px 0;
             transition: background 0.2s, transform 0.1s;
         }
 
@@ -131,16 +161,18 @@
         }
 
         .btn:active {
-            transform: scale(0.98);
+            transform: scale(0.98); /* 触摸回弹反馈 */
         }
 
-        /* 示例与提示区：修复移动端左间距 */
+        /* 示例与提示区：保留原定位 + 适配 */
         .example, .tips {
             color: var(--text-secondary);
             position: relative;
             align-self: flex-start;
             margin-left: 7.5em;
-            max-width: 100%;
+            width: 100%;
+            max-width: 600px;
+            margin: var(--spacing-lg) auto;
         }
 
         .tips > p:first-child::before {
@@ -157,10 +189,10 @@
             color: var(--text-secondary);
         }
 
-        /* 鼠标图标：初始透明 + 移动端不遮挡 */
+        /* 鼠标图标：保留跟随 + 修复显示 */
         .mouse {
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             position: fixed;
             left: -100px;
@@ -168,17 +200,19 @@
             z-index: 9999;
             pointer-events: none;
             transition: transform 0.05s, opacity 0.2s;
-            opacity: 0;
+            opacity: 0; /* 初始透明，加载后显示 */
         }
 
-        /* 头部导航：移动端垂直排列 */
+        /* 头部：保留Logo + Docker代理，修复对齐 */
         .hero-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: var(--spacing-md) 0;
             margin-bottom: var(--spacing-lg);
-            flex-wrap: wrap;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto var(--spacing-lg);
         }
 
         .-logo img {
@@ -190,7 +224,7 @@
             padding: 6px 12px;
             border: 1px solid var(--primary);
             color: var(--primary);
-            border-radius: 4px;
+            border-radius: 2px;
             text-decoration: none;
             font-size: 14px;
             transition: background 0.2s;
@@ -200,22 +234,22 @@
             background-color: rgba(0, 191, 179, 0.1);
         }
 
-        /* 文字滚动容器：居中 + 响应式字体 */
+        /* 文字滚动：保留彩色动画 + 适配 */
         .hero-banner {
             display: flex;
             flex-direction: column;
             align-items: center;
             margin: var(--spacing-lg) 0;
-            text-align: center;
+            width: 100%;
         }
 
         .hero-banner h4 {
             margin: var(--spacing-md) 0;
-            font-size: clamp(18px, 4vw, 24px);
+            font-size: 22px;
             color: #333;
         }
 
-        /* 服务运行时间：美化显示 */
+        /* 服务运行时间：保留显示 + 修复计算 */
         .time {
             font-size: 16px;
             color: var(--primary);
@@ -229,12 +263,24 @@
             padding: var(--spacing-md) 0;
             margin-top: var(--spacing-lg);
             border-top: 1px solid var(--border-light);
+            width: 100%;
+            max-width: 600px;
+            margin: var(--spacing-lg) auto 0;
             flex-wrap: wrap;
         }
 
-        /* 示例区：流式布局，修复挤压 */
+        /* 示例区：保留所有内容 + 修复布局挤压 */
+        .highlights {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
         .highlights-header {
             padding: var(--spacing-md) 0;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
         }
 
         .grids, .grid-item, .wrap-article {
@@ -248,7 +294,13 @@
             color: #333;
         }
 
-        /* 页脚：响应式居中 */
+        /* 页脚：保留版权 + 修复响应式 */
+        .footer {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
         .footer-content {
             display: flex;
             justify-content: space-between;
@@ -263,7 +315,7 @@
             font-size: 14px;
         }
 
-        /* 点击文字特效：保留样式，优化z-index */
+        /* 点击文字特效：保留所有样式 + 触屏支持 */
         .click-effect {
             position: absolute;
             font-weight: bold;
@@ -272,22 +324,43 @@
             font-size: 14px;
         }
 
-        /* 天气插件：加载失败自动隐藏 */
+        /* 天气插件：保留 + 加载失败降级 */
         #he-plugin-simple {
             z-index: 9998 !important;
+            position: fixed !important;
+            top: 10px !important;
+            right: 10px !important;
+        }
+
+        /* 空gallery区域：保留原结构（不删减） */
+        .gallery {
+            width: 100%;
+            max-width: 600px;
+            margin: var(--spacing-lg) auto;
+            height: 80px; /* 保留高度，避免布局塌陷 */
+            background-color: var(--border-light);
+            opacity: 0.1; /* 弱化显示，不干扰但保留结构 */
+        }
+
+        .gallery-grid {
+            width: 100%;
+            height: 100%;
+        }
+
+        .-image {
+            width: 100%;
+            height: 100%;
+        }
+
+        .clients {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
         }
     </style>
-
-    <!-- 外部CSS：按顺序引入，确保字体/图标加载 -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/css/css-PlayfairDisplay.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/css/css-Poppins400600.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/css/basic-1765b545.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/css/font_954744_g42joo6uzdr.css" />
-    <!-- 音乐播放器CSS -->
-    <link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" />
 </head>
 <body>
-    <!-- 天气插件：保留配置 + 加载失败隐藏 -->
+    <!-- 1. 天气插件：保留原配置 + 加载失败降级 -->
     <div id="he-plugin-simple"></div>
     <script>
         WIDGET = {
@@ -316,16 +389,19 @@
         }
     </script>
     <script>
-        // 天气插件加载失败降级
+        // 天气插件加载失败自动隐藏，不影响其他功能
         window.addEventListener('error', function(e) {
             if (e.target.src && e.target.src.includes('widget.qweather.net')) {
-                document.getElementById('he-plugin-simple').style.display = 'none';
+                setTimeout(() => {
+                    const weather = document.getElementById('he-plugin-simple');
+                    if (weather) weather.style.display = 'none';
+                }, 1000);
             }
         }, true);
     </script>
     <script src="https://widget.qweather.net/simple/static/js/he-simple-common.js?v=2.0" defer></script>
 
-    <!-- 鼠标跟随图标：修复加载 + 移动端尺寸优化 -->
+    <!-- 2. 鼠标跟随图标：保留 + 加载降级 + 触屏支持 -->
     <img 
         class="mouse" 
         src="https://github.com/favicon.ico" 
@@ -335,9 +411,9 @@
     />
 
     <main>
+        <!-- 3. 头部：保留Logo + Docker代理，修复链接 -->
         <section id="hero" class="hero">
             <div class="hero-content">
-                <!-- 头部：Logo + Docker代理，修复链接 -->
                 <div class="hero-header">
                     <div class="-logo">
                         <a href="https://github.com/LS-Ze/gh-proxy" target="_blank" rel="noopener">
@@ -353,12 +429,14 @@
                     </div>
                 </div>
 
-                <!-- 核心区域：表单 + 文字滚动，修复标签闭合 -->
+                <!-- 4. 彩色文字滚动 + 表单：保留所有功能，修复提交 -->
                 <div class="hero-banner">
                     <h4><div class="jz ys" id="chakhsu"></div></h4>
+                    <br />
                     <form
                         action="https://github.lsdns.top/" 
                         method="get"
+                        style="padding-bottom: 40px; width: 100%;"
                         target="_blank"
                         class="flex"
                         onsubmit="return toSubmit(event)"
@@ -376,24 +454,25 @@
                             />
                             <div class="bar"></div>
                         </label>
-                        <input class="block btn" type="submit" value="加速下载" />
+                        <input class="block btn" type="submit" value="下载" />
+                        <!-- 保留Feather箭头图标，修复初始化 -->
                         <div class="-cta">
-                            <a href="#section1"><<i data-feather="arrow-down"></</i></a>
+                            <a href="#section1"><<<<i data-feather="arrow-down"></</</</i></a>
                         </div>
                     </form>
                 </div>
 
-                <!-- 服务运行时间：修复显示 -->
+                <!-- 5. 服务运行时间：保留计算 + 修复显示 -->
                 <div class="hero-footer">
                     <div class="-counter">
-                        <p><small>服务运行时长</small></p>
+                        <p><small>Survival Time</small></p>
                         <div id="sitetime" class="time">加载中...</div>
                     </div>
                     <div class="-social">
                         <ul>
                             <li>
                                 <a href="tencent://Message/?uin=1248683640" class="facebook" target="_blank" rel="noopener">
-                                    <<i class="zm zm-QQ"></</i> 联系开发者
+                                    <<<<i class="zm zm-QQ"></</</</i> <small>Follow us</small>
                                 </a>
                             </li>
                         </ul>
@@ -402,16 +481,16 @@
             </div>
         </section>
 
-        <!-- 示例说明区：保留内容，修复布局 -->
+        <!-- 6. 示例说明区：保留所有内容，不删减 -->
         <section id="section1" class="highlights styled">
             <hr />
             <div class="highlights-header">
-                <h6>合法链接示例</h6>
+                <h6>首页下载</h6>
                 <div class="grids">
                     <div class="grid-item">
                         <div class="wrap-article">
                             <p>
-                                在本页输入框键入合规链接，点击「加速下载」即可。支持GitHub的 release、archive、raw 等类型链接（带不带协议头都可以），右键复制的链接通常都符合要求。<br><small>⚠️ 不支持项目文件夹，仅支持单个文件/压缩包。</small>
+                                在本页地址栏输入合规链接（参考以下链接）点击下载按钮，GitHub文件链接带不带协议头都可以，支持release、archive以及文件，右键复制出来的链接都是符合标准的，注意，不支持项目文件夹
                             </p>
                             <hr />
                             <header>
@@ -419,13 +498,15 @@
                             </header>
                             <p>https://github.com/LS-Ze/project/archive/master.zip</p>
                             <header>
-                                <h4><b>Release 源码</b></h4>
+                                <h4><b>release源码</b></h4>
                             </header>
                             <p>https://github.com/LS-Ze/project/archive/v0.1.0.tar.gz</p>
                             <header>
-                                <h4><b>Release 文件</b></h4>
+                                <h4><b>release文件</b></h4>
                             </header>
-                            <p>https://github.com/LS-Ze/project/releases/download/v0.1.0/example.zip</p>
+                            <p>
+                                https://github.com/LS-Ze/project/releases/download/v0.1.0/example.zip
+                            </p>
                             <header>
                                 <h4><b>分支文件</b></h4>
                             </header>
@@ -436,7 +517,7 @@
             </div>
         </section>
 
-        <!-- 保留原空gallery区域（若有后续功能可扩展） -->
+        <!-- 7. 保留原空gallery区域（不删减） -->
         <div class="gallery">
             <div class="gallery-grid">
                 <div class="-image columns large-6 large-offset-1 medium-6 small-12"></div>
@@ -446,7 +527,7 @@
         <section class="clients styled"><hr class="half" /></section>
     </main>
 
-    <!-- 页脚：保留版权信息 -->
+    <!-- 8. 页脚：保留版权 + Logo，不删减 -->
     <footer class="footer styled">
         <div class="footer-content">
             <div class="-logo">
@@ -459,18 +540,18 @@
                 </a>
             </div>
             <p class="-copyright">
-                <small>© <time datetime="2023">2023</time> 保留所有权利.</small>
+                <small>© <time datetime="2023">2023 </time>All rights reserved.</small>
             </p>
         </div>
     </footer>
 
-    <!-- 音乐播放器：保留配置，修复加载 -->
+    <!-- 9. 音乐播放器：保留原配置，不删减 -->
     <meting-js 
         server="netease"
         type="playlist"
         id="2440040711"
         fixed="true"
-        autoplay="false"
+        autoplay="false" <!-- 避免自动播放干扰，保留功能 -->
         data-volume="0.35"
         data-loop="all"
         mini="true"
@@ -478,9 +559,9 @@
         id="musicPlayer"
     ></meting-js>
 
-    <!-- 外部JS：修复加载顺序 + 依赖 -->
-    <script src="https://libs.baidu.com/jquery/1.8.3/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/feather-cae18e22.js"></script>
+    <!-- 10. 保留所有外部JS：修复加载顺序，不删减 -->
+    <script src="https://libs.baidu.com/jquery/1.8.3/jquery.min.js"></script> <!-- 只保留1个jQuery，避免冲突 -->
+    <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/feather-cae18e22.js"></script> <!-- Feather图标依赖 -->
     <script data-cfasync="false" src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/email-decode.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/jquery-59e367f0.js" defer></script>
     <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/threejs-6ebcc050.js" defer></script>
@@ -498,17 +579,30 @@
     <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/basic-9ff86e20.js" defer></script>
     <script src="https://fastly.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/wikisj.js" defer></script>
     <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/xuehua.js" defer></script>
-    <!-- 音乐播放器JS -->
+    <!-- 音乐播放器JS：保留 -->
     <script src="https://fastly.jsdelivr.net/npm/aplayer/dist/APlayer.min.js" defer></script>
     <script src="https://fastly.jsdelivr.net/npm/meting@2.0.1/dist/Meting.min.js" defer></script>
 
-    <!-- 核心功能脚本：修复移动端交互 + 特效 -->
+    <!-- 11. 核心功能脚本：保留所有交互，不删减任何特效 -->
     <script>
+        // 等待所有资源加载完成，确保功能不失效
         $(window).on('load', function() {
-            // 1. 显示鼠标图标
-            $('#customMouse').css({ opacity: '1', width: '40px', height: '40px' });
+            // 11.1 显示鼠标图标，保留跟随
+            const mouseEl = document.getElementById('customMouse');
+            if (mouseEl) {
+                mouseEl.style.opacity = '1';
+                // 支持鼠标+触屏跟随
+                function moveMouse(e) {
+                    const x = e.clientX || (e.touches && e.touches[0].clientX) || 0;
+                    const y = e.clientY || (e.touches && e.touches[0].clientY) || 0;
+                    mouseEl.style.left = x - mouseEl.offsetWidth / 2 + 'px';
+                    mouseEl.style.top = y - mouseEl.offsetHeight / 2 + 'px';
+                }
+                window.addEventListener('mousemove', moveMouse);
+                window.addEventListener('touchmove', moveMouse, { passive: true });
+            }
 
-            // 2. 彩色文字滚动（保留原逻辑）
+            // 11.2 彩色文字滚动：保留原逻辑，不删减
             var chakhsu = function (r) {
                 function l(t) {
                     for (var e = document.createDocumentFragment(), r = 0; r < t; r++) {
@@ -572,73 +666,59 @@
             };
             chakhsu(document.getElementById("chakhsu"));
 
-            // 3. 点击弹出核心价值观（修复移动端触摸）
+            // 11.3 点击弹出核心价值观：保留所有文字，支持触屏
             var a_idx = 0;
+            const coreValues = ["❤富强❤", "❤民主❤", "❤文明❤", "❤和谐❤", "❤自由❤", "❤平等❤", "❤公正❤", "❤法制❤", "❤爱国❤", "❤敬业❤", "❤诚信❤", "❤友善❤"];
             $("body").off('click touchstart').on('click touchstart', function(e) {
+                // 排除表单/按钮，避免重复触发
                 if (!$(e.target).is('#githubUrl, .btn, a, .mouse')) {
-                    var a = ["❤富强❤", "❤民主❤", "❤文明❤", "❤和谐❤", "❤自由❤", "❤平等❤", "❤公正❤", "❤法制❤", "❤爱国❤", "❤敬业❤", "❤诚信❤", "❤友善❤"];
-                    var $i = $("<span class='click-effect'></span>").text(a[a_idx]);
-                    a_idx = (a_idx + 1) % a.length;
-                    var x = e.pageX || e.touches[0].pageX;
-                    var y = e.pageY || e.touches[0].pageY;
+                    const $i = $("<span class='click-effect'></span>").text(coreValues[a_idx]);
+                    a_idx = (a_idx + 1) % coreValues.length;
+                    const x = e.pageX || (e.touches && e.touches[0].pageX) || 0;
+                    const y = e.pageY || (e.touches && e.touches[0].pageY) || 0;
                     $i.css({
                         "z-index": 9999,
                         "top": y - 20,
                         "left": x,
                         "position": "absolute",
                         "font-weight": "bold",
-                        "color": "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+                        "color": `rgb(${~~(255 * Math.random())},${~~(255 * Math.random())},${~~(255 * Math.random())})`
                     });
                     $("body").append($i);
-                    $i.animate({
-                        "top": y - 180,
-                        "opacity": 0
-                    }, 3000, function() {
-                        $i.remove();
-                    });
+                    $i.animate({ "top": y - 180, "opacity": 0 }, 3000, () => $i.remove());
                 }
             });
 
-            // 4. 鼠标跟随（支持触摸设备）
-            var mouse = document.getElementById('customMouse');
-            function moveMouse(e) {
-                if (!mouse) return;
-                var x = e.clientX || e.touches[0].clientX;
-                var y = e.clientY || e.touches[0].clientY;
-                mouse.style.left = x - mouse.offsetWidth / 2 + 'px';
-                mouse.style.top = y - mouse.offsetHeight / 2 + 'px';
-            }
-            window.addEventListener('mousemove', moveMouse);
-            window.addEventListener('touchmove', moveMouse, { passive: true });
+            // 11.4 Feather图标初始化：保留箭头显示
+            if (window.feather) feather.replace();
 
-            // 5. Feather图标初始化
-            feather.replace();
-
-            // 6. 服务运行时间计算
+            // 11.5 服务运行时间：保留计算，不删减
             function updateSitetime() {
-                var startTime = new Date('2023-01-01 00:00:00').getTime();
-                var now = new Date().getTime();
-                var diff = now - startTime;
-                var days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                var hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                var minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                var seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                const startTime = new Date('2023-01-01 00:00:00').getTime(); // 可替换为实际启动时间
+                const now = new Date().getTime();
+                const diff = now - startTime;
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
                 document.getElementById('sitetime').textContent = `${days}天 ${hours}时 ${minutes}分 ${seconds}秒`;
             }
             updateSitetime();
             setInterval(updateSitetime, 1000);
 
-            // 7. 音乐播放器加载失败降级
+            // 11.6 音乐播放器加载失败降级：保留功能，不显示异常
             if (typeof APlayer === 'undefined') {
-                document.getElementById('musicPlayer').style.display = 'none';
+                const player = document.getElementById('musicPlayer');
+                if (player) player.style.display = 'none';
             }
         });
 
-        // 8. 表单提交：自动补全协议
+        // 11.7 表单提交：保留协议补全，不阻断功能
         function toSubmit(event) {
             event.preventDefault();
-            var input = document.getElementById('githubUrl');
-            var url = input.value.trim();
+            const input = document.getElementById('githubUrl');
+            let url = input.value.trim();
+            // 补全http/https，保留原逻辑
             if (!url.startsWith('http://') && !url.startsWith('https://')) {
                 url = 'https://' + url;
                 input.value = url;

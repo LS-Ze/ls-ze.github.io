@@ -29,7 +29,7 @@
         .container {
             width: 100%;
             max-width: 500px;
-            z-index: 1;
+            z-index: 2; /* 提升主内容层级，确保不被遮挡 */
         }
         .header {
             display: flex;
@@ -62,11 +62,17 @@
             align-items: center;
             margin-bottom: 30px;
         }
+        .title-container {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%); /* 恢复背景 */
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
         .title {
             font-size: 24px;
             color: #333;
-            margin-bottom: 20px;
             text-align: center;
+            line-height: 1.5;
         }
         .url-input {
             width: 100%;
@@ -145,7 +151,7 @@
             right: 10px !important;
             display: none;
         }
-        /* 音乐小组件：修复样式+层级+加载降级 */
+        /* 音乐小组件：最终修复-层级+尺寸+加载降级 */
         meting-js {
             position: fixed !important;
             bottom: 10px !important;
@@ -153,7 +159,7 @@
             transform: translateX(-50%) !important;
             z-index: 9996 !important;
             display: none;
-            width: 280px !important; /* 限制宽度，避免遮挡 */
+            width: 240px !important; /* 进一步缩小宽度，避免遮挡 */
             height: auto !important;
         }
     </style>
@@ -225,9 +231,11 @@
             <a href="https://docker.lsdns.top/" class="docker-btn" target="_blank">Docker代理</a>
         </div>
 
-        <!-- 核心功能区 -->
+        <!-- 核心功能区：恢复彩色文字背景 -->
         <div class="main">
-            <h2 class="title"><div class="jz ys" id="chakhsu"></div></h2>
+            <div class="title-container">
+                <h2 class="title"><div class="jz ys" id="chakhsu"></div></h2>
+            </div>
             <form action="https://github.lsdns.top/" method="get" target="_blank" onsubmit="return toSubmit(event)">
                 <input 
                     type="text" 
@@ -264,7 +272,7 @@
         </div>
     </div>
 
-    <!-- 4. 音乐小组件：修复加载+显示+样式 -->
+    <!-- 4. 音乐小组件：最终修复-加载+显示+尺寸 -->
     <meting-js 
         server="netease"
         type="playlist"
@@ -299,7 +307,7 @@
                 window.addEventListener('touchmove', moveMouse, { passive: true });
             }
 
-            // 彩色文字滚动
+            // 彩色文字滚动：恢复背景后正常显示
             var chakhsu = function (r) {
                 function l(t) {
                     for (var e = document.createDocumentFragment(), r = 0; r < t; r++) {

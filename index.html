@@ -2,200 +2,350 @@
 <html lang="zh-Hans">
 <head>
     <meta charset="utf-8" />
-    <!-- 响应式配置：确保移动端适配 -->
     <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no" />
     <title>LSDNS-GitHub 文件加速</title>
-    
-    <!-- 网页图标：使用GitHub官方CDN，避免404 -->
+    <!-- 引入图标库（轻量，仅用基础图标） -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" />
+    <!-- 网页图标：GitHub官方CDN -->
     <link rel="icon" href="https://github.githubassets.com/favicons/favicon.svg" />
 
     <style>
         /* ==============================================
-           1. 基础全局样式：统一页面默认表现
+           1. 基础变量：统一配色与间距，便于维护
+           ============================================== */
+        :root {
+            --primary: #00bfb3;    /* 主色：青色（专业、清爽） */
+            --primary-dark: #00a89f;/* 主色加深（hover反馈） */
+            --bg-light: #f8fafc;   /* 浅背景（区分区域，不刺眼） */
+            --text-main: #333;     /* 主文字（清晰易读） */
+            --text-secondary: #666;/* 次要文字（辅助信息） */
+            --text-light: #94a3b8; /* 淡文字（示例、提示） */
+            --border: #e2e8f0;     /* 边框色（柔和不突兀） */
+            --radius: 4px;         /* 统一圆角（现代感） */
+            --shadow: 0 2px 8px rgba(0,0,0,0.08); /* 轻微阴影（分层） */
+            --spacing-sm: 8px;     /* 小间距 */
+            --spacing-md: 16px;    /* 中等间距 */
+            --spacing-lg: 24px;    /* 大间距 */
+            --spacing-xl: 32px;    /* 超大间距 */
+            --transition: all 0.25s ease; /* 统一过渡（动效自然） */
+        }
+
+        /* ==============================================
+           2. 全局重置：消除默认差异，统一基础样式
            ============================================== */
         * {
             margin: 0;
             padding: 0;
-            box-sizing: border-box; /* 统一盒模型 */
+            box-sizing: border-box;
         }
 
         body {
             min-height: 100vh;
-            padding: 20px;
-            font-family: Arial, sans-serif; /* 基础无衬线字体，兼容性好 */
+            padding: var(--spacing-md);
+            font-family: 'Segoe UI', Roboto, Arial, sans-serif;
             background-color: #fff;
-            max-width: 600px; /* 限制最大宽度，避免宽屏拉伸 */
-            margin: 0 auto; /* 水平居中，简化响应式 */
+            color: var(--text-main);
+            line-height: 1.5;
+        }
+
+        /* 容器：居中+最大宽度，避免宽屏拉伸 */
+        .container {
+            max-width: 650px;
+            margin: 0 auto;
+            padding: var(--spacing-md) 0;
+        }
+
+        /* 标题样式：统一层级 */
+        h4 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        /* 链接样式：统一交互 */
+        a {
+            text-decoration: none;
+            color: var(--primary);
+            transition: var(--transition);
+        }
+
+        a:hover {
+            color: var(--primary-dark);
+        }
+
+        /* 列表样式：优化示例列表 */
+        ul {
+            padding-left: 1.5rem;
+        }
+
+        li {
+            margin: var(--spacing-sm) 0;
+            color: var(--text-secondary);
         }
 
         /* ==============================================
-           2. 功能模块样式：按页面区域分组
+           3. 功能模块：视觉分层+交互优化
            ============================================== */
-        /* 2.1 加载提示：JS加载完成后隐藏 */
+        /* 3.1 加载提示：动效+图标，避免单调 */
         .loading-tip {
-            text-align: center;
-            color: #666;
-            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-sm);
+            color: var(--text-secondary);
             font-size: 14px;
+            margin: var(--spacing-lg) 0;
         }
 
-        /* 2.2 头部区域：Logo + 辅助链接 */
+        /* 加载动画：旋转图标 */
+        .loading-icon {
+            animation: spin 1.5s linear infinite;
+            color: var(--primary);
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* 3.2 无JS提示：醒目但不刺眼 */
+        noscript {
+            display: block;
+            text-align: center;
+            padding: var(--spacing-sm) var(--spacing-md);
+            background-color: #fff5f5;
+            color: #dc2626;
+            border: 1px solid #fecdd3;
+            border-radius: var(--radius);
+            font-size: 14px;
+            margin: var(--spacing-md) 0;
+        }
+
+        /* 3.3 头部区域：Logo+导航，轻微阴影分层 */
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin: 30px 0;
+            padding: var(--spacing-md) 0;
+            margin-bottom: var(--spacing-xl);
+            border-bottom: 1px solid var(--border);
         }
 
         .github-logo {
-            width: 32px;
-            height: 32px; /* 固定图标尺寸，避免拉伸 */
+            width: 36px;
+            height: 36px;
+            transition: var(--transition);
+        }
+
+        .github-logo:hover {
+            transform: scale(1.05); /* 轻微缩放，反馈交互 */
         }
 
         .docker-btn {
-            padding: 6px 12px;
-            border: 1px solid #00bfb3;
-            color: #00bfb3;
-            border-radius: 2px;
-            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: 8px 16px;
+            border: 1px solid var(--primary);
+            border-radius: var(--radius);
+            color: var(--primary);
             font-size: 14px;
-            transition: color 0.2s, border-color 0.2s; /* hover过渡，提升体验 */
+            font-weight: 500;
+            transition: var(--transition);
         }
 
         .docker-btn:hover {
-            color: #00a89f;
-            border-color: #00a89f;
+            background-color: var(--bg-light);
+            border-color: var(--primary-dark);
+            color: var(--primary-dark);
         }
 
-        /* 2.3 核心输入区：用户交互核心 */
-        .input-group {
-            margin: 20px 0;
+        /* 3.4 核心输入区：视觉焦点，引导用户操作 */
+        .input-card {
+            background-color: #fff;
+            padding: var(--spacing-xl);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: var(--spacing-xl);
         }
 
         .url-input {
             width: 100%;
-            padding: 12px 8px;
-            border: 1px solid #bfbfbf;
-            border-radius: 2px;
+            padding: 14px 16px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
             font-size: 16px;
-            margin-bottom: 20px;
-            outline: none;
-            transition: border-color 0.2s; /* 聚焦反馈 */
+            color: var(--text-main);
+            margin-bottom: var(--spacing-md);
+            transition: var(--transition);
         }
 
         .url-input:focus {
-            border-color: #00bfb3; /* 聚焦时高亮边框 */
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 191, 179, 0.1); /* 聚焦光晕，突出激活态 */
+        }
+
+        .url-input::placeholder {
+            color: var(--text-light);
         }
 
         .download-btn {
-            width: 160px;
-            height: 40px;
-            background-color: #00bfb3;
-            color: #fff;
+            width: 100%;
+            max-width: 180px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-sm);
+            padding: 12px 0;
+            background-color: var(--primary);
             border: none;
-            border-radius: 2px;
+            border-radius: var(--radius);
+            color: #fff;
+            font-size: 15px;
+            font-weight: 500;
             cursor: pointer;
-            font-size: 14px;
-            transition: background-color 0.2s; /* 点击反馈 */
+            transition: var(--transition);
         }
 
         .download-btn:hover {
-            background-color: #00a89f; /* hover加深颜色 */
+            background-color: var(--primary-dark);
+            transform: translateY(-2px); /* 轻微上移，增强交互感 */
+            box-shadow: 0 4px 12px rgba(0, 191, 179, 0.2);
         }
 
-        /* 2.4 示例与提示区：用户指引 */
-        .example-section,
+        .download-btn:active {
+            transform: translateY(0); /* 点击回弹，模拟物理反馈 */
+        }
+
+        /* 3.5 示例与提示区：区分视觉，引导清晰 */
+        .guide-section {
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .example-card {
+            background-color: var(--bg-light);
+            padding: var(--spacing-lg);
+            border-radius: var(--radius);
+            margin-top: var(--spacing-sm);
+        }
+
+        .example-link {
+            color: var(--primary);
+            word-break: break-all;
+            transition: var(--transition);
+        }
+
+        .example-link:hover {
+            text-decoration: underline; /*  hover下划线，提示可复制 */
+            color: var(--primary-dark);
+        }
+
         .tip-section {
-            margin: 25px 0;
-            color: #7b7b7b;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-md);
+            background-color: #f0fdfa;
+            border-left: 3px solid var(--primary);
+            border-radius: 0 var(--radius) var(--radius) 0;
+            margin-top: var(--spacing-md);
             font-size: 14px;
+            color: var(--text-secondary);
         }
 
-        .example-section h4 {
-            margin-bottom: 8px;
-            color: #333; /* 标题加深，突出层级 */
-        }
-
-        .example-list {
-            margin-top: 8px;
-            padding-left: 20px;
-            line-height: 1.6; /* 行高优化，提升阅读体验 */
-        }
-
-        /* 2.5 底部区域：辅助信息 */
+        /* 3.6 底部区域：简洁信息，不抢焦点 */
         .footer {
-            margin-top: 50px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: var(--spacing-md) 0;
+            border-top: 1px solid var(--border);
             font-size: 14px;
-            color: #666;
+            color: var(--text-secondary);
         }
 
         .contact-link {
-            color: #00bfb3;
-            text-decoration: none;
             display: flex;
             align-items: center;
-            gap: 4px; /* 图标与文字间距，避免拥挤 */
-            transition: color 0.2s;
+            gap: var(--spacing-sm);
         }
 
-        .contact-link:hover {
-            color: #00a89f; /* 链接hover反馈 */
-        }
-
-        /* 2.6 鼠标特效：辅助视觉 */
+        /* 3.7 鼠标特效：更自然的跟随 */
         .mouse {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%; /* 圆形图标 */
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
             position: fixed;
             left: 0;
             top: 0;
-            z-index: 9999; /* 确保在最上层，不被遮挡 */
-            pointer-events: none; /* 不影响底层点击 */
-            transition: transform 0.05s; /* 跟随平滑过渡 */
-            opacity: 0; /* 初始透明，JS加载后显示 */
+            z-index: 9999;
+            pointer-events: none;
+            transition: transform 0.06s ease, opacity 0.2s ease;
+            opacity: 0;
+            mix-blend-mode: multiply; /* 与背景融合，不突兀 */
         }
 
         /* ==============================================
-           3. 特殊兼容样式：处理边缘场景
+           4. 响应式：适配移动端，优化触摸体验
            ============================================== */
-        /* 禁用JS时的提示：告知用户功能限制 */
-        noscript {
-            display: block;
-            text-align: center;
-            color: #ff4444; /* 红色提示，吸引注意 */
-            margin: 10px 0;
-            font-size: 14px;
+        @media (max-width: 576px) {
+            :root {
+                --spacing-sm: 6px;
+                --spacing-md: 12px;
+                --spacing-lg: 18px;
+                --spacing-xl: 24px;
+            }
+
+            .header {
+                margin-bottom: var(--spacing-lg);
+            }
+
+            .download-btn {
+                max-width: 100%; /* 移动端按钮占满宽度，便于触摸 */
+            }
+
+            .input-card {
+                padding: var(--spacing-lg);
+            }
+
+            .footer {
+                flex-direction: column;
+                gap: var(--spacing-md);
+                text-align: center;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- 1. 加载提示：告知用户页面加载状态 -->
-    <div class="loading-tip">页面加载中... 若长时间无响应，请刷新重试</div>
+    <div class="container">
+        <!-- 1. 加载提示：带旋转图标，更友好 -->
+        <div class="loading-tip" id="loadingTip">
+            <<i class="fa fa-circle-o-notch loading-icon" aria-hidden="true"></</i>
+            <span>页面加载中... 若长时间无响应，请刷新重试</span>
+        </div>
 
-    <!-- 2. 无JS降级提示：禁用JS时显示 -->
-    <noscript>
-        请启用JavaScript以自动补全链接协议（如输入"github.com/xxx"会补全为"https://github.com/xxx"）
-    </noscript>
+        <!-- 2. 无JS提示：醒目样式，告知功能限制 -->
+        <noscript>
+            <<i class="fa fa-exclamation-circle" aria-hidden="true"></</i>
+            请启用JavaScript以自动补全链接协议（如输入"GitHub.com/xxx"会补全为"https://GitHub.com/xxx"）
+        </noscript>
 
-    <!-- 3. 鼠标跟随图标：GitHub官方图标，加载失败有降级 -->
-    <img 
-        class="mouse" 
-        src="https://github.githubassets.com/favicons/favicon.svg" 
-        alt="鼠标图标"
-        onerror="
-            // 加载失败时显示纯色圆形
-            this.style.background = '#00bfb3';
-            this.src = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
-        "
-    />
+        <!-- 3. 鼠标跟随图标：GitHub官方图标，加载失败降级 -->
+        <img 
+            class="mouse" 
+            src="https://github.githubassets.com/favicons/favicon.svg" 
+            alt="鼠标图标"
+            onerror="
+                this.style.background = var(--primary);
+                this.src = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
+            "
+            id="mouseIcon"
+        />
 
-    <div class="page-content">
-        <!-- 4. 头部区域：Logo + Docker代理链接 -->
-        <div class="header">
+        <!-- 4. 头部区域：Logo+Docker代理，带边框分隔 -->
+        <header class="header">
             <a 
                 href="https://github.com/LS-Ze/gh-proxy" 
                 target="_blank" 
@@ -206,12 +356,7 @@
                     class="github-logo" 
                     src="https://github.githubassets.com/favicons/favicon.svg" 
                     alt="GitHub Logo"
-                    onerror="
-                        // Logo加载失败时显示黑色方块
-                        this.style.background = '#000';
-                        this.width = 32;
-                        this.height = 32;
-                    "
+                    onerror="this.style.background='#000'; this.width=36; this.height=36"
                 />
             </a>
             <a 
@@ -221,48 +366,62 @@
                 class="docker-btn"
                 title="Docker代理服务"
             >
+                <<i class="fa fa-cubes" aria-hidden="true"></</i>
                 docker代理
             </a>
-        </div>
+        </header>
 
-        <!-- 5. 核心功能区：表单提交（GitHub链接加速） -->
-        <form 
-            class="input-group" 
-            action="https://github.lsdns.top/" 
-            method="get" 
-            target="_blank" 
-            onsubmit="return fixLinkProtocol(event)"
-            title="输入GitHub链接后点击加速下载"
-        >
-            <input 
-                type="text" 
-                class="url-input" 
-                name="q" 
-                placeholder="输入GitHub文件链接（需包含http/https，如release/raw链接）" 
-                required
-                autocomplete="off" <!-- 关闭自动填充，避免干扰 -->
-            />
-            <button type="submit" class="download-btn">加速下载</button>
-        </form>
+        <!-- 5. 核心功能区：卡片式设计，视觉聚焦 -->
+        <main>
+            <section class="input-card">
+                <form 
+                    action="https://github.lsdns.top/" 
+                    method="get" 
+                    target="_blank" 
+                    onsubmit="return fixLinkProtocol(event)"
+                    id="加速表单"
+                >
+                    <input 
+                        type="text" 
+                        class="url-input" 
+                        name="q" 
+                        placeholder="输入GitHub文件链接（如release/raw链接，支持自动补全http/https）" 
+                        required
+                        autocomplete="off"
+                        title="输入后点击加速下载，支持release、raw、archive类型链接"
+                    />
+                    <button type="submit" class="download-btn">
+                        <<i class="fa fa-download" aria-hidden="true"></</i>
+                        加速下载
+                    </button>
+                </form>
+            </section>
 
-        <!-- 6. 示例指引区：告知用户合法链接格式 -->
-        <div class="example-section">
-            <h4>合法输入示例：</h4>
-            <ul class="example-list">
-                <li>1. 分支源码：https://github.com/LS-Ze/project/archive/master.zip</li>
-                <li>2. Release文件：https://github.com/LS-Ze/project/releases/download/v0.1.0/example.zip</li>
-                <li>3. 原始文件：https://raw.githubusercontent.com/LS-Ze/project/master/xxx.txt</li>
-            </ul>
-        </div>
+            <!-- 6. 示例与提示区：分区清晰，引导明确 -->
+            <section class="guide-section">
+                <h4>合法输入示例：</h4>
+                <div class="example-card">
+                    <ul class="example-list">
+                        <li>1. 分支源码：<a href="javascript:;" class="example-link" onclick="copyLink(this)">https://github.com/LS-Ze/project/archive/master.zip</a></li>
+                        <li>2. Release文件：<a href="javascript:;" class="example-link" onclick="copyLink(this)">https://github.com/LS-Ze/project/releases/download/v0.1.0/example.zip</a></li>
+                        <li>3. 原始文件：<a href="javascript:;" class="example-link" onclick="copyLink(this)">https://raw.githubusercontent.com/LS-Ze/project/master/xxx.txt</a></li>
+                    </ul>
+                </div>
 
-        <!-- 7. 限制提示区：明确功能边界 -->
-        <div class="tip-section">
-            <p>提示：不支持GitHub项目文件夹，仅支持单个文件/压缩包链接</p>
-        </div>
+                <!-- 提示区：带图标，更醒目 -->
+                <div class="tip-section">
+                    <<i class="fa fa-info-circle" aria-hidden="true" style="color: var(--primary);"></</i>
+                    <span>提示：不支持GitHub项目文件夹，仅支持单个文件/压缩包链接</span>
+                </div>
+            </section>
+        </main>
 
-        <!-- 8. 底部区域：服务状态 + 联系开发者 -->
-        <div class="footer">
-            <div class="service-status">服务稳定运行中</div>
+        <!-- 7. 底部区域：简洁信息，带交互 -->
+        <footer class="footer">
+            <div class="service-status">
+                <<i class="fa fa-check-circle" aria-hidden="true" style="color: var(--primary);"></</i>
+                服务稳定运行中
+            </div>
             <a 
                 href="tencent://Message/?uin=1248683640" 
                 target="_blank" 
@@ -270,57 +429,83 @@
                 class="contact-link"
                 title="通过QQ联系开发者"
             >
-                💬 联系开发者
+                <<i class="fa fa-qq" aria-hidden="true"></</i>
+                联系开发者
             </a>
-        </div>
+        </footer>
     </div>
 
     <!-- ==============================================
-        核心JS：仅保留必要功能（协议补全、鼠标跟随、加载提示）
+        核心JS：保留功能+新增交互（复制链接、加载反馈）
        ============================================== -->
     <script>
-        // 等待DOM完全加载后执行（避免操作未渲染元素）
+        // 等待DOM完全加载
         document.addEventListener('DOMContentLoaded', function() {
-            /* 1. 链接协议补全：用户输入无协议时自动加https */
-            window.fixLinkProtocol = function(event) {
-                // 阻止表单默认提交，先处理链接
-                event.preventDefault();
-                const inputElement = document.querySelector('.url-input');
-                let linkValue = inputElement.value.trim();
+            const loadingTip = document.getElementById('loadingTip');
+            const mouseIcon = document.getElementById('mouseIcon');
 
-                // 补全http/https协议（避免无效链接）
-                if (!linkValue.startsWith('http://') && !linkValue.startsWith('https://')) {
-                    linkValue = 'https://' + linkValue;
-                    inputElement.value = linkValue; // 更新输入框值，让用户可见
+            /* 1. 隐藏加载提示 + 显示鼠标图标 */
+            if (loadingTip) loadingTip.style.display = 'none';
+            if (mouseIcon) mouseIcon.style.opacity = '1';
+
+            /* 2. 链接协议补全：自动加https */
+            window.fixLinkProtocol = function(event) {
+                event.preventDefault();
+                const input = document.querySelector('.url-input');
+                let link = input.value.trim();
+
+                // 补全协议
+                if (!link.startsWith('http://') && !link.startsWith('https://')) {
+                    link = 'https://' + link;
+                    input.value = link;
                 }
 
-                // 处理完成后提交表单
+                // 提交表单
                 event.target.submit();
                 return true;
             };
 
-            /* 2. 鼠标跟随：让自定义图标跟随鼠标移动 */
-            const mouseIcon = document.querySelector('.mouse');
-            if (mouseIcon) {
-                mouseIcon.style.opacity = '1'; // JS加载后显示图标
+            /* 3. 鼠标跟随：更自然的定位 */
+            window.addEventListener('mousemove', function(e) {
+                if (!mouseIcon) return;
+                const x = e.clientX - mouseIcon.offsetWidth / 2;
+                const y = e.clientY - mouseIcon.offsetHeight / 2;
+                mouseIcon.style.transform = `translate(${x}px, ${y}px)`;
+            });
 
-                // 监听鼠标移动事件
-                window.addEventListener('mousemove', function(event) {
-                    // 计算图标中心位置（避免图标偏移鼠标）
-                    const iconX = event.clientX - mouseIcon.offsetWidth / 2;
-                    const iconY = event.clientY - mouseIcon.offsetHeight / 2;
-
-                    // 用transform实现平滑跟随（性能优于top/left）
-                    mouseIcon.style.transform = `translate(${iconX}px, ${iconY}px)`;
-                });
-            }
-
-            /* 3. 隐藏加载提示：告知用户页面已加载完成 */
-            const loadingTip = document.querySelector('.loading-tip');
-            if (loadingTip) {
-                loadingTip.style.display = 'none';
-            }
+            /* 4. 窗口失焦时隐藏鼠标图标，避免残留 */
+            window.addEventListener('blur', function() {
+                if (mouseIcon) mouseIcon.style.opacity = '0';
+            });
+            window.addEventListener('focus', function() {
+                if (mouseIcon) mouseIcon.style.opacity = '1';
+            });
         });
+
+        /* 5. 新增：复制示例链接到剪贴板，提升体验 */
+        function copyLink(el) {
+            const link = el.textContent;
+            navigator.clipboard.writeText(link).then(() => {
+                // 复制成功提示（临时改变文本）
+                const originalText = el.textContent;
+                el.textContent = '✅ 已复制到剪贴板！';
+                el.style.color = '#10b981'; // 成功色
+
+                // 2秒后恢复原文本
+                setTimeout(() => {
+                    el.textContent = originalText;
+                    el.style.color = '';
+                }, 2000);
+            }).catch(() => {
+                // 复制失败提示
+                el.textContent = '❌ 复制失败，请手动复制';
+                el.style.color = '#ef4444'; // 失败色
+                setTimeout(() => {
+                    el.textContent = el.dataset.original || el.textContent;
+                    el.style.color = '';
+                }, 2000);
+            });
+        }
     </script>
 </body>
 </html>

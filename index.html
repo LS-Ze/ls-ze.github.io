@@ -2,437 +2,151 @@
 <html lang="zh-Hans">
 <head>
     <meta charset="utf-8" />
-    <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <title>LSDNS-GitHub 文件加速</title>
     <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no" />
-    <!-- 统一图标引用，减少HTTP请求 -->
+    <title>LSDNS-GitHub 文件加速</title>
     <link rel="icon" href="https://github.com/favicon.ico" />
-    <link rel="apple-touch-icon" href="https://github.com/favicon.ico" />
-    <meta name="author" content="Aether-Themes" />
-    <meta name="description" content="GitHub,GitHub文件加速,GitHub代理" />
-    <meta name="keywords" content="GitHub,GitHub文件加速,GitHub代理" />
-    <meta name="theme-color" content="#00C66B" />
-
-    <!-- 精简CSS：删除冗余样式，统一布局逻辑 -->
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        /* 基础样式：确保元素排版整齐 */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { min-height: 100vh; padding: 20px; font-family: sans-serif; }
+        .container { max-width: 600px; margin: 0 auto; }
+        /* 头部导航 */
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+        .github-logo { width: 32px; height: 32px; }
+        .docker-btn { padding: 6px 12px; border: 1px solid #00bfb3; color: #00bfb3; border-radius: 2px; text-decoration: none; font-size: 14px; }
+        /* 输入区域 */
+        .input-group { margin-bottom: 30px; }
+        .url-input { 
+            width: 100%; 
+            padding: 12px 8px; 
+            border: none; 
+            border-bottom: 1px solid #bfbfbf; 
+            font-size: 16px; 
+            margin-bottom: 20px;
         }
-        body, html {
-            width: 100%;
-            min-height: 100vh;
-            cursor: none;
-            font-family: 'Poppins', sans-serif;
-        }
-        body {
-            padding: 20px;
-        }
-        p {
-            word-break: break-all;
-        }
-        /* 响应式标题间距 */
-        @media (max-width: 500px) {
-            h1, .hero-banner h4 {
-                margin-top: 40px;
-            }
-            .example, .tips {
-                margin-left: 1em !important; /* 修复移动端左间距过大 */
-            }
-        }
-        /* 弹性布局统一 */
-        .flex {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: 20px; /* 统一间距 */
-        }
-        .block {
-            display: block;
-            position: relative;
-        }
-        /* 输入框样式优化 */
-        .url {
-            font-size: 16px;
-            padding: 10px 5px;
-            width: 90%;
-            max-width: 300px;
-            border: none;
-            border-bottom: 1px solid #bfbfbf;
-            background: transparent;
-        }
-        input:focus {
-            outline: none;
-        }
-        /* 输入框下划线动画 */
-        .bar {
-            content: "";
-            height: 2px;
-            width: 100%;
-            bottom: 0;
-            left: 0;
-            position: absolute;
-            background: #00bfb3;
-            transform: scaleX(0);
-            transition: 0.2s ease transform;
-        }
-        .url:focus ~ .bar {
-            transform: scaleX(1);
-        }
-        /* 按钮样式统一 */
-        .btn {
-            line-height: 38px;
-            background-color: #00bfb3;
-            color: #fff;
-            text-align: center;
+        .download-btn { 
+            width: 160px; 
+            height: 40px; 
+            background: #00bfb3; 
+            color: #fff; 
+            border: none; 
+            border-radius: 2px; 
+            cursor: pointer; 
             font-size: 14px;
-            border: none;
-            border-radius: 2px;
-            cursor: pointer;
-            padding: 5px 20px;
-            width: 160px;
-            transition: background 0.2s;
         }
-        .btn:hover {
-            background-color: #00a89f; /*  hover反馈 */
-        }
-        /* 示例文本样式 */
-        .example, .tips {
-            color: #7b7b7b;
-            margin: 10px 0;
-            align-self: flex-start;
-            margin-left: 5em;
-        }
-        .tips > p:first-child::before {
-            position: absolute;
-            left: -3em;
-            content: "PS：";
-            color: #7b7b7b;
-        }
-        .example > p:first-child::before {
-            position: absolute;
-            left: -7.5em;
-            content: "合法输入示例：";
-            color: #7b7b7b;
-        }
-        /* 鼠标特效样式 */
-        .mouse {
-            width: 24px; /* 缩小鼠标图标，避免遮挡 */
-            height: 24px;
-            border-radius: 50%;
-            position: fixed;
-            left: -100px;
-            z-index: 9999;
-            pointer-events: none;
-            transition: transform 0.05s; /* 平滑跟随 */
-        }
-        /* 头部导航简化 */
-        .hero-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 0;
-        }
-        .button {
-            padding: 5px 15px;
-            border: 1px solid #00bfb3;
-            color: #00bfb3;
-            border-radius: 2px;
-            text-decoration: none;
-            font-size: 14px;
-            transition: background 0.2s;
-        }
-        .button:hover {
-            background-color: #f5f5f5;
-        }
-        /* 计数样式 */
-        .hero-footer {
-            display: flex;
-            justify-content: space-between;
-            padding: 20px 0;
-            margin-top: 30px;
-        }
-        .time {
-            font-size: 16px;
-            color: #00bfb3;
-        }
-        /* 点击文字特效 */
-        .click-effect {
-            position: absolute;
-            font-weight: bold;
-            z-index: 9999;
-            pointer-events: none;
+        /* 示例与提示 */
+        .example-section, .tip-section { margin: 25px 0; color: #7b7b7b; }
+        .example-list { margin-top: 8px; padding-left: 20px; line-height: 1.6; }
+        .tip-section { font-size: 14px; }
+        /* 底部信息 */
+        .footer { margin-top: 50px; display: flex; justify-content: space-between; align-items: center; }
+        .run-time { color: #00bfb3; }
+        .contact-link { color: #00bfb3; text-decoration: none; font-size: 14px; }
+        /* 鼠标图标 */
+        .mouse { 
+            width: 24px; 
+            height: 24px; 
+            border-radius: 50%; 
+            position: fixed; 
+            left: -100px; 
+            z-index: 9999; 
+            pointer-events: none; 
+            transition: transform 0.05s;
         }
     </style>
-
-    <!-- 精简外部资源：只保留关键CSS，延迟加载非必要资源 -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/css/basic-1765b545.css" />
-    <link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'" />
 </head>
 <body>
-    <!-- 天气插件（保留核心功能，简化配置） -->
-    <div id="he-plugin-simple"></div>
-    <script>
-        WIDGET = {
-            "CONFIG": {
-                "modules": "01234",
-                "background": "5",
-                "tmpColor": "4A86E8",
-                "tmpSize": "16",
-                "cityColor": "4A86E8",
-                "citySize": "16",
-                "aqiColor": "4A86E8",
-                "aqiSize": "16",
-                "weatherIconSize": "24",
-                "alertIconSize": "18",
-                "padding": "10px",
-                "shadow": "1",
-                "language": "auto",
-                "borderRadius": "5",
-                "fixed": "true",
-                "vertical": "left",
-                "horizontal": "right",
-                "right": "10",
-                "top": "10",
-                "key": "0ab81df2c1134bc5868a61828167daf5"
-            }
-        }
-    </script>
-    <script src="https://widget.qweather.net/simple/static/js/he-simple-common.js?v=2.0" defer></script>
-
-    <!-- 鼠标图标 -->
+    <!-- 鼠标跟随图标 -->
     <img class="mouse" src="https://github.com/favicon.ico" alt="鼠标图标" />
 
-    <main>
-        <section id="hero" class="hero">
-            <div class="hero-content">
-                <!-- 头部导航 -->
-                <div class="hero-header">
-                    <div class="-logo">
-                        <a href="https://github.com/LS-Ze/gh-proxy" target="_blank">
-                            <img src="https://github.com/favicon.ico" alt="GitHub Logo" width="32" height="32" />
-                        </a>
-                    </div>
-                    <div class="-cta js--localscroll">
-                        <a href="https://docker.lsdns.top/" class="button button--hollow" target="_blank">docker代理</a>
-                    </div>
-                </div>
+    <div class="container">
+        <!-- 头部：GitHub Logo + docker代理按钮 -->
+        <div class="header">
+            <a href="https://github.com/LS-Ze/gh-proxy" target="_blank">
+                <img class="github-logo" src="https://github.com/favicon.ico" alt="GitHub Logo" />
+            </a>
+            <a href="https://docker.lsdns.top/" target="_blank" class="docker-btn">docker代理</a>
+        </div>
 
-                <!-- 核心表单区域 -->
-                <div class="hero-banner flex">
-                    <h4><div class="jz ys" id="chakhsu"></div></h4>
-                    <!-- 表单：补全toSubmit函数，修复跳转逻辑 -->
-                    <form action="./" method="get" style="padding: 20px 0; width: 100%; max-width: 400px;" target="_blank" class="flex" onsubmit="return toSubmit(event)">
-                        <label class="block" style="width: 100%;">
-                            <input 
-                                class="block url" 
-                                name="q" 
-                                type="text" 
-                                placeholder="输入GitHub文件链接（如release/raw链接）" 
-                                pattern="^((https|http):\/\/)?(github\.com\/.+?\/.+?\/(?:releases|archive|blob|raw|suites)|((?:raw|gist)\.(?:githubusercontent|github)\.com))\/.+$" 
-                                required 
-                            />
-                            <div class="bar"></div>
-                        </label>
-                        <input class="block btn" type="submit" value="加速下载" />
-                    </form>
+        <!-- 核心：输入框 + 下载按钮 -->
+        <div class="input-group">
+            <input 
+                type="text" 
+                class="url-input" 
+                placeholder="输入GitHub文件链接（如release/raw链接）" 
+                pattern="^((https|http):\/\/)?(github\.com\/.+?\/.+?\/(?:releases|archive|blob|raw|suites)|((?:raw|gist)\.(?:githubusercontent|github)\.com))\/.+$" 
+                required
+            />
+            <button class="download-btn">加速下载</button>
+        </div>
 
-                    <!-- 示例说明 -->
-                    <div class="example" style="position: relative; width: 100%; max-width: 400px; padding: 0 20px;">
-                        <p>合法输入示例：</p>
-                        <p>1. 分支源码：https://github.com/LS-Ze/project/archive/master.zip</p>
-                        <p>2. Release文件：https://github.com/LS-Ze/project/releases/download/v0.1.0/example.zip</p>
-                        <p>3. 原始文件：https://raw.githubusercontent.com/LS-Ze/project/master/xxx.txt</p>
-                    </div>
-                    <div class="tips" style="position: relative; width: 100%; max-width: 400px; padding: 0 20px;">
-                        <p>提示：不支持GitHub项目文件夹，仅支持单个文件/压缩包链接</p>
-                    </div>
-                </div>
+        <!-- 合法输入示例 -->
+        <div class="example-section">
+            <h4>合法输入示例：</h4>
+            <ul class="example-list">
+                <li>1. 分支源码：https://github.com/LS-Ze/project/archive/master.zip</li>
+                <li>2. Release文件：https://github.com/LS-Ze/project/releases/download/v0.1.0/example.zip</li>
+                <li>3. 原始文件：https://raw.githubusercontent.com/LS-Ze/project/master/xxx.txt</li>
+            </ul>
+        </div>
 
-                <!-- 底部信息 -->
-                <div class="hero-footer">
-                    <div class="-counter">
-                        <p><small>服务运行时间</small></p>
-                        <div id="sitetime" class="time">加载中...</div>
-                    </div>
-                    <div class="-social">
-                        <a href="tencent://Message/?uin=1248683640" class="facebook" target="_blank">
-                            <<i class="zm zm-QQ"></</i> <small>联系开发者</small>
-                        </a>
-                    </div>
-                </div>
+        <!-- 提示信息 -->
+        <div class="tip-section">
+            <p>提示：不支持GitHub项目文件夹，仅支持单个文件/压缩包链接</p>
+        </div>
+
+        <!-- 底部：服务运行时间 + 联系开发者 -->
+        <div class="footer">
+            <div>
+                <p style="font-size: 14px; color: #666;">服务运行时间</p>
+                <p class="run-time" id="sitetime">加载中...</p>
             </div>
-        </section>
-    </main>
+            <a href="tencent://Message/?uin=1248683640" target="_blank" class="contact-link">
+                <<i class="zm zm-QQ"></</i> 联系开发者
+            </a>
+        </div>
+    </div>
 
-    <!-- 音乐播放器：延迟加载，避免阻塞页面 -->
-    <script src="https://fastly.jsdelivr.net/npm/aplayer/dist/APlayer.min.js" defer></script>
-    <script src="https://fastly.jsdelivr.net/npm/meting@2.0.1/dist/Meting.min.js" defer></script>
+    <!-- 服务运行时间计算脚本 -->
+    <script>
+        // 替换为实际服务启动时间（示例：2023-01-01 00:00:00）
+        const startTime = new Date('2023-01-01 00:00:00').getTime();
+        function updateRunTime() {
+            const now = new Date().getTime();
+            const diff = now - startTime;
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            document.getElementById('sitetime').textContent = `${days}天 ${hours}时 ${minutes}分 ${seconds}秒`;
+        }
+        updateRunTime();
+        setInterval(updateRunTime, 1000);
+
+        // 鼠标跟随脚本
+        const mouseEl = document.querySelector('.mouse');
+        window.addEventListener('mousemove', (e) => {
+            const x = e.clientX - mouseEl.offsetWidth / 2;
+            const y = e.clientY - mouseEl.offsetHeight / 2;
+            mouseEl.style.transform = `translate(${x}px, ${y}px)`;
+        });
+    </script>
+
+    <!-- 音乐播放器（完全隐藏，仅保留功能） -->
+    <link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" />
+    <script src="https://fastly.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
+    <script src="https://fastly.jsdelivr.net/npm/meting@2.0.1/dist/Meting.min.js"></script>
     <meting-js 
         server="netease" 
         type="playlist" 
         id="2440040711" 
         fixed="true" 
-        autoplay="false"  <!-- 关闭自动播放，优化体验 -->
+        autoplay="false" 
         data-volume="0.35" 
         data-loop="all" 
         mini="true" 
         order="random"
-        style="display: none;"  <!-- 默认隐藏，避免遮挡 -->
+        style="display: none !important;"
     ></meting-js>
-
-    <!-- 核心脚本：删除重复jQuery，合并功能 -->
-    <script src="https://libs.baidu.com/jquery/1.8.3/jquery.min.js" defer></script>
-    <script>
-        // 1. 文字滚动效果（保留原逻辑，简化变量名）
-        function initScrollText(el) {
-            const texts = ["GitHub文件加速工具", "稳定·快速·免费"];
-            const colors = [
-                "rgb(110,64,170)", "rgb(255,94,99)", "rgb(48,239,130)", 
-                "rgb(35,171,216)", "rgb(251,150,51)", "rgb(198,214,60)"
-            ];
-            let config = {
-                text: "",
-                prefixIdx: -5,
-                textIdx: 0,
-                charIdx: 0,
-                direction: "forward",
-                delay: 2,
-                step: 1,
-                speed: 75
-            };
-
-            // 创建随机字符
-            function createRandomChars(count) {
-                const frag = document.createDocumentFragment();
-                for (let i = 0; i < count; i++) {
-                    const span = document.createElement("span");
-                    span.textContent = String.fromCharCode(94 * Math.random() + 33);
-                    span.style.color = colors[Math.floor(Math.random() * colors.length)];
-                    frag.appendChild(span);
-                }
-                return frag;
-            }
-
-            // 滚动逻辑
-            function updateText() {
-                const currentText = texts[config.textIdx];
-                if (config.step > 0) {
-                    config.step--;
-                } else {
-                    config.step = 1;
-                    if (config.prefixIdx < config.text.length) {
-                        if (config.prefixIdx >= 0) config.text += config.text[config.prefixIdx];
-                        config.prefixIdx++;
-                    } else {
-                        if (config.direction === "forward") {
-                            if (config.charIdx < currentText.length) {
-                                config.text += currentText[config.charIdx];
-                                config.charIdx++;
-                            } else if (config.delay > 0) {
-                                config.delay--;
-                            } else {
-                                config.direction = "backward";
-                                config.delay = 2;
-                            }
-                        } else {
-                            if (config.charIdx > 0) {
-                                config.text = config.text.slice(0, -1);
-                                config.charIdx--;
-                            } else {
-                                config.textIdx = (config.textIdx + 1) % texts.length;
-                                config.direction = "forward";
-                            }
-                        }
-                    }
-                }
-                el.textContent = config.text;
-                el.appendChild(createRandomChars(
-                    config.prefixIdx < config.text.length 
-                        ? Math.min(5, 5 + config.prefixIdx) 
-                        : Math.min(5, currentText.length - config.charIdx)
-                ));
-                setTimeout(updateText, config.speed);
-            }
-            updateText();
-        }
-        // 初始化滚动文字
-        window.addEventListener('load', () => initScrollText(document.getElementById("chakhsu")));
-
-        // 2. 表单提交函数（补全原缺失逻辑）
-        function toSubmit(e) {
-            e.preventDefault();
-            const input = e.target.querySelector('input[name="q"]');
-            let url = input.value.trim();
-            // 补全HTTP协议（如果缺失）
-            if (!url.startsWith('http')) url = 'https://' + url;
-            input.value = url;
-            e.target.submit();
-            return true;
-        }
-
-        // 3. 服务运行时间计算
-        function initRunTime(el) {
-            const startTime = new Date('2023-01-01 00:00:00').getTime(); // 请替换为实际启动时间
-            function updateTime() {
-                const now = new Date().getTime();
-                const diff = now - startTime;
-                // 计算天/时/分/秒
-                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-                el.textContent = `${days}天 ${hours}时 ${minutes}分 ${seconds}秒`;
-            }
-            updateTime();
-            setInterval(updateTime, 1000);
-        }
-        window.addEventListener('load', () => initRunTime(document.getElementById("sitetime")));
-
-        // 4. 鼠标跟随特效（优化性能，减少重绘）
-        function initMouseFollow() {
-            const mouseEl = document.querySelector('.mouse');
-            window.addEventListener('mousemove', (e) => {
-                // 计算中心定位，避免图标偏移
-                const x = e.clientX - mouseEl.offsetWidth / 2;
-                const y = e.clientY - mouseEl.offsetHeight / 2;
-                mouseEl.style.transform = `translate(${x}px, ${y}px)`;
-            });
-        }
-        window.addEventListener('load', initMouseFollow);
-
-        // 5. 点击文字特效（简化逻辑，减少内存占用）
-        function initClickEffect() {
-            const texts = ["❤富强❤", "❤民主❤", "❤文明❤", "❤和谐❤", "❤自由❤", "❤平等❤", "❤公正❤", "❤法制❤", "❤爱国❤", "❤敬业❤", "❤诚信❤", "❤友善❤"];
-            let textIdx = 0;
-            document.body.addEventListener('click', (e) => {
-                const span = document.createElement('span');
-                span.className = 'click-effect';
-                span.textContent = texts[textIdx];
-                textIdx = (textIdx + 1) % texts.length;
-                // 定位
-                span.style.left = `${e.clientX}px`;
-                span.style.top = `${e.clientY - 20}px`;
-                // 随机颜色
-                span.style.color = `rgb(${~~(255 * Math.random())}, ${~~(255 * Math.random())}, ${~~(255 * Math.random())})`;
-                document.body.appendChild(span);
-                // 动画+移除
-                setTimeout(() => {
-                    span.style.transition = 'all 3s ease';
-                    span.style.opacity = '0';
-                    span.style.top = `${e.clientY - 180}px`;
-                    // 动画结束后删除
-                    setTimeout(() => span.remove(), 3000);
-                }, 10);
-            });
-        }
-        window.addEventListener('load', initClickEffect);
-    </script>
-
-    <!-- 非关键脚本：延迟加载 -->
-    <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/email-decode.min.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/gh/LS-Ze/ls-ze.github.io@main/static/js/main-d441790e.js" defer></script>
 </body>
 </html>

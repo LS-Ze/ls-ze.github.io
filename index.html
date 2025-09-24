@@ -2,161 +2,250 @@
 <html lang="zh-Hans">
 <head>
     <meta charset="utf-8" />
+    <!-- 响应式配置：确保移动端适配 -->
     <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no" />
     <title>LSDNS-GitHub 文件加速</title>
-    <!-- 修复：用GitHub官方图标CDN，避免404 -->
+    
+    <!-- 网页图标：使用GitHub官方CDN，避免404 -->
     <link rel="icon" href="https://github.githubassets.com/favicons/favicon.svg" />
+
     <style>
-        /* 基础样式：极简+高性能，减少加载压力 */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            min-height: 100vh; 
-            padding: 20px; 
-            font-family: Arial, sans-serif; 
-            background: #fff; 
-            max-width: 600px; 
-            margin: 0 auto; /* 全局居中，简化响应式 */
+        /* ==============================================
+           1. 基础全局样式：统一页面默认表现
+           ============================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box; /* 统一盒模型 */
         }
-        /* 加载提示：默认显示，JS加载后隐藏 */
-        .loading-tip { 
-            text-align: center; 
-            color: #666; 
-            margin: 20px 0; 
-            font-size: 14px; 
+
+        body {
+            min-height: 100vh;
+            padding: 20px;
+            font-family: Arial, sans-serif; /* 基础无衬线字体，兼容性好 */
+            background-color: #fff;
+            max-width: 600px; /* 限制最大宽度，避免宽屏拉伸 */
+            margin: 0 auto; /* 水平居中，简化响应式 */
         }
-        /* 头部：保留核心跳转，简化布局 */
-        .header { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            margin: 30px 0; 
+
+        /* ==============================================
+           2. 功能模块样式：按页面区域分组
+           ============================================== */
+        /* 2.1 加载提示：JS加载完成后隐藏 */
+        .loading-tip {
+            text-align: center;
+            color: #666;
+            margin: 20px 0;
+            font-size: 14px;
         }
-        .github-logo { width: 32px; height: 32px; }
-        .docker-btn { 
-            padding: 6px 12px; 
-            border: 1px solid #00bfb3; 
-            color: #00bfb3; 
-            border-radius: 2px; 
-            text-decoration: none; 
-            font-size: 14px; 
+
+        /* 2.2 头部区域：Logo + 辅助链接 */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 30px 0;
         }
-        /* 核心输入区：确保可见性+易用性 */
-        .input-group { margin: 20px 0; }
-        .url-input { 
-            width: 100%; 
-            padding: 12px 8px; 
-            border: 1px solid #bfbfbf; 
-            border-radius: 2px; 
-            font-size: 16px; 
+
+        .github-logo {
+            width: 32px;
+            height: 32px; /* 固定图标尺寸，避免拉伸 */
+        }
+
+        .docker-btn {
+            padding: 6px 12px;
+            border: 1px solid #00bfb3;
+            color: #00bfb3;
+            border-radius: 2px;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s, border-color 0.2s; /* hover过渡，提升体验 */
+        }
+
+        .docker-btn:hover {
+            color: #00a89f;
+            border-color: #00a89f;
+        }
+
+        /* 2.3 核心输入区：用户交互核心 */
+        .input-group {
+            margin: 20px 0;
+        }
+
+        .url-input {
+            width: 100%;
+            padding: 12px 8px;
+            border: 1px solid #bfbfbf;
+            border-radius: 2px;
+            font-size: 16px;
             margin-bottom: 20px;
             outline: none;
+            transition: border-color 0.2s; /* 聚焦反馈 */
         }
-        .download-btn { 
-            width: 160px; 
-            height: 40px; 
-            background: #00bfb3; 
-            color: #fff; 
-            border: none; 
-            border-radius: 2px; 
-            cursor: pointer; 
+
+        .url-input:focus {
+            border-color: #00bfb3; /* 聚焦时高亮边框 */
+        }
+
+        .download-btn {
+            width: 160px;
+            height: 40px;
+            background-color: #00bfb3;
+            color: #fff;
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
             font-size: 14px;
-            transition: background 0.2s;
+            transition: background-color 0.2s; /* 点击反馈 */
         }
-        .download-btn:hover { background: #00a89f; } /* 增加hover反馈 */
-        /* 示例/提示：清晰指引，减少误解 */
-        .example-section, .tip-section { 
-            margin: 25px 0; 
-            color: #7b7b7b; 
-            font-size: 14px; 
+
+        .download-btn:hover {
+            background-color: #00a89f; /* hover加深颜色 */
         }
-        .example-list { 
-            margin-top: 8px; 
-            padding-left: 20px; 
-            line-height: 1.6; 
+
+        /* 2.4 示例与提示区：用户指引 */
+        .example-section,
+        .tip-section {
+            margin: 25px 0;
+            color: #7b7b7b;
+            font-size: 14px;
         }
-        /* 底部：简化信息，去除无效计算 */
-        .footer { 
-            margin-top: 50px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            font-size: 14px; 
+
+        .example-section h4 {
+            margin-bottom: 8px;
+            color: #333; /* 标题加深，突出层级 */
+        }
+
+        .example-list {
+            margin-top: 8px;
+            padding-left: 20px;
+            line-height: 1.6; /* 行高优化，提升阅读体验 */
+        }
+
+        /* 2.5 底部区域：辅助信息 */
+        .footer {
+            margin-top: 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
             color: #666;
         }
-        .contact-link { 
-            color: #00bfb3; 
-            text-decoration: none; 
-            display: flex; 
-            align-items: center; 
-            gap: 4px; /* 图标与文字间距 */
+
+        .contact-link {
+            color: #00bfb3;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 4px; /* 图标与文字间距，避免拥挤 */
+            transition: color 0.2s;
         }
-        /* 鼠标图标：优化初始状态+降级 */
-        .mouse { 
-            width: 24px; 
-            height: 24px; 
-            border-radius: 50%; 
-            position: fixed; 
-            left: 0; 
-            top: 0; 
-            z-index: 9999; 
-            pointer-events: none; 
-            transition: transform 0.05s;
+
+        .contact-link:hover {
+            color: #00a89f; /* 链接hover反馈 */
+        }
+
+        /* 2.6 鼠标特效：辅助视觉 */
+        .mouse {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%; /* 圆形图标 */
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 9999; /* 确保在最上层，不被遮挡 */
+            pointer-events: none; /* 不影响底层点击 */
+            transition: transform 0.05s; /* 跟随平滑过渡 */
             opacity: 0; /* 初始透明，JS加载后显示 */
         }
-        /* 禁用JS时隐藏加载提示+显示提醒 */
+
+        /* ==============================================
+           3. 特殊兼容样式：处理边缘场景
+           ============================================== */
+        /* 禁用JS时的提示：告知用户功能限制 */
         noscript {
             display: block;
             text-align: center;
-            color: #ff4444;
+            color: #ff4444; /* 红色提示，吸引注意 */
             margin: 10px 0;
             font-size: 14px;
         }
     </style>
 </head>
 <body>
-    <!-- 加载提示：JS加载后隐藏 -->
+    <!-- 1. 加载提示：告知用户页面加载状态 -->
     <div class="loading-tip">页面加载中... 若长时间无响应，请刷新重试</div>
 
-    <!-- 禁用JS提醒：无JS时显示 -->
+    <!-- 2. 无JS降级提示：禁用JS时显示 -->
     <noscript>
         请启用JavaScript以自动补全链接协议（如输入"github.com/xxx"会补全为"https://github.com/xxx"）
     </noscript>
 
-    <!-- 鼠标跟随图标：用GitHub官方图标，修复404 -->
+    <!-- 3. 鼠标跟随图标：GitHub官方图标，加载失败有降级 -->
     <img 
         class="mouse" 
         src="https://github.githubassets.com/favicons/favicon.svg" 
         alt="鼠标图标"
-        onerror="this.style.background='#00bfb3'; this.src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='"
+        onerror="
+            // 加载失败时显示纯色圆形
+            this.style.background = '#00bfb3';
+            this.src = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
+        "
     />
 
-    <div>
-        <!-- 头部：GitHub Logo + docker代理（修复图标404） -->
+    <div class="page-content">
+        <!-- 4. 头部区域：Logo + Docker代理链接 -->
         <div class="header">
-            <a href="https://github.com/LS-Ze/gh-proxy" target="_blank" rel="noopener">
+            <a 
+                href="https://github.com/LS-Ze/gh-proxy" 
+                target="_blank" 
+                rel="noopener" 
+                title="前往项目GitHub主页"
+            >
                 <img 
                     class="github-logo" 
                     src="https://github.githubassets.com/favicons/favicon.svg" 
                     alt="GitHub Logo"
-                    onerror="this.style.background='#000'; this.width=32; this.height=32"
+                    onerror="
+                        // Logo加载失败时显示黑色方块
+                        this.style.background = '#000';
+                        this.width = 32;
+                        this.height = 32;
+                    "
                 />
             </a>
-            <a href="https://docker.lsdns.top/" target="_blank" rel="noopener" class="docker-btn">docker代理</a>
+            <a 
+                href="https://docker.lsdns.top/" 
+                target="_blank" 
+                rel="noopener" 
+                class="docker-btn"
+                title="Docker代理服务"
+            >
+                docker代理
+            </a>
         </div>
 
-        <!-- 核心功能：修复表单提交目标，确保加速生效 -->
-        <form class="input-group" action="https://github.lsdns.top/" method="get" target="_blank" onsubmit="return fixLink(event)">
+        <!-- 5. 核心功能区：表单提交（GitHub链接加速） -->
+        <form 
+            class="input-group" 
+            action="https://github.lsdns.top/" 
+            method="get" 
+            target="_blank" 
+            onsubmit="return fixLinkProtocol(event)"
+            title="输入GitHub链接后点击加速下载"
+        >
             <input 
                 type="text" 
                 class="url-input" 
                 name="q" 
                 placeholder="输入GitHub文件链接（需包含http/https，如release/raw链接）" 
                 required
+                autocomplete="off" <!-- 关闭自动填充，避免干扰 -->
             />
             <button type="submit" class="download-btn">加速下载</button>
         </form>
 
-        <!-- 合法输入示例（保留核心指引） -->
+        <!-- 6. 示例指引区：告知用户合法链接格式 -->
         <div class="example-section">
             <h4>合法输入示例：</h4>
             <ul class="example-list">
@@ -166,53 +255,71 @@
             </ul>
         </div>
 
-        <!-- 提示信息（明确限制） -->
+        <!-- 7. 限制提示区：明确功能边界 -->
         <div class="tip-section">
             <p>提示：不支持GitHub项目文件夹，仅支持单个文件/压缩包链接</p>
         </div>
 
-        <!-- 底部：修复联系图标，移除无效时间计算 -->
+        <!-- 8. 底部区域：服务状态 + 联系开发者 -->
         <div class="footer">
-            <div>服务稳定运行中</div> <!-- 替换虚假时间计算，显示真实状态 -->
-            <a href="tencent://Message/?uin=1248683640" target="_blank" rel="noopener" class="contact-link">
-                💬 联系开发者 <!-- 用系统表情替代缺失的QQ图标，无需外部依赖 -->
+            <div class="service-status">服务稳定运行中</div>
+            <a 
+                href="tencent://Message/?uin=1248683640" 
+                target="_blank" 
+                rel="noopener" 
+                class="contact-link"
+                title="通过QQ联系开发者"
+            >
+                💬 联系开发者
             </a>
         </div>
     </div>
 
-    <!-- 核心脚本：仅保留必要功能，确保兼容性 -->
+    <!-- ==============================================
+        核心JS：仅保留必要功能（协议补全、鼠标跟随、加载提示）
+       ============================================== -->
     <script>
-        // 等待DOM完全加载后执行
+        // 等待DOM完全加载后执行（避免操作未渲染元素）
         document.addEventListener('DOMContentLoaded', function() {
-            // 1. 链接协议补全（核心功能，无JS时用户需手动输入http）
-            window.fixLink = function(e) {
-                e.preventDefault();
-                const input = document.querySelector('.url-input');
-                let url = input.value.trim();
-                // 补全http/https协议
-                if (!url.startsWith('http://') && !url.startsWith('https://')) {
-                    url = 'https://' + url;
-                    input.value = url;
+            /* 1. 链接协议补全：用户输入无协议时自动加https */
+            window.fixLinkProtocol = function(event) {
+                // 阻止表单默认提交，先处理链接
+                event.preventDefault();
+                const inputElement = document.querySelector('.url-input');
+                let linkValue = inputElement.value.trim();
+
+                // 补全http/https协议（避免无效链接）
+                if (!linkValue.startsWith('http://') && !linkValue.startsWith('https://')) {
+                    linkValue = 'https://' + linkValue;
+                    inputElement.value = linkValue; // 更新输入框值，让用户可见
                 }
-                e.target.submit();
+
+                // 处理完成后提交表单
+                event.target.submit();
                 return true;
             };
 
-            // 2. 鼠标跟随（简化逻辑，避免报错）
-            const mouseEl = document.querySelector('.mouse');
-            if (mouseEl) {
-                mouseEl.style.opacity = '1'; // JS加载后显示图标
-                window.addEventListener('mousemove', (e) => {
-                    // 计算中心定位，避免偏移
-                    const x = e.clientX - mouseEl.offsetWidth / 2;
-                    const y = e.clientY - mouseEl.offsetHeight / 2;
-                    mouseEl.style.transform = `translate(${x}px, ${y}px)`;
+            /* 2. 鼠标跟随：让自定义图标跟随鼠标移动 */
+            const mouseIcon = document.querySelector('.mouse');
+            if (mouseIcon) {
+                mouseIcon.style.opacity = '1'; // JS加载后显示图标
+
+                // 监听鼠标移动事件
+                window.addEventListener('mousemove', function(event) {
+                    // 计算图标中心位置（避免图标偏移鼠标）
+                    const iconX = event.clientX - mouseIcon.offsetWidth / 2;
+                    const iconY = event.clientY - mouseIcon.offsetHeight / 2;
+
+                    // 用transform实现平滑跟随（性能优于top/left）
+                    mouseIcon.style.transform = `translate(${iconX}px, ${iconY}px)`;
                 });
             }
 
-            // 3. 隐藏加载提示（告知用户加载完成）
+            /* 3. 隐藏加载提示：告知用户页面已加载完成 */
             const loadingTip = document.querySelector('.loading-tip');
-            if (loadingTip) loadingTip.style.display = 'none';
+            if (loadingTip) {
+                loadingTip.style.display = 'none';
+            }
         });
     </script>
 </body>

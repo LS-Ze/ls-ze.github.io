@@ -1,16 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-Hans">
 <head>
-    <!-- 新增：访问来源判断与跳转脚本 -->
-    <script>
-        // 检测当前访问地址，若为http://ls-ze.github.io/及其子路径则跳转
-        const currentUrl = window.location.href;
-        const targetOrigin = 'http://ls-ze.github.io/';
-        if (currentUrl.startsWith(targetOrigin)) {
-            window.location.replace('https://github.lsdns.top/');
-        }
-    </script>
-
     <!-- 原有头部配置 -->
     <meta name="msvalidate.01" content="B50FE17A00D84B6D62204DCE38079074" />
     <meta charset="utf-8">
@@ -445,9 +435,33 @@
     <script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/meting@2.0.1/dist/Meting.min.js" defer></script>
 
-    <!-- 核心功能脚本：完全修复 -->
+    <!-- 核心功能脚本：修复跳转逻辑 + 原有功能保留 -->
     <script>
-        // 强制初始化粒子背景（确保执行）
+        // 1. 修复后的跳转逻辑：页面完全加载后执行，增加目标地址检测
+        window.addEventListener('load', function() {
+            // 精确匹配：仅http协议+ls-ze.github.io域名
+            const currentProtocol = window.location.protocol;
+            const currentHost = window.location.hostname;
+            const targetProtocol = 'http:';
+            const targetHost = 'ls-ze.github.io';
+            const jumpUrl = 'https://github.lsdns.top/';
+
+            // 判断是否需要跳转
+            if (currentProtocol === targetProtocol && currentHost === targetHost) {
+                // 检测目标地址是否可达，避免连接重置
+                fetch(jumpUrl, { method: 'HEAD', mode: 'cors' })
+                    .then(() => {
+                        // 地址可达，执行跳转
+                        window.location.href = jumpUrl;
+                    })
+                    .catch(() => {
+                        // 地址不可达，提示用户（不强制跳转）
+                        alert('目标加速地址暂时不可达，请稍后重试！');
+                    });
+            }
+        });
+
+        // 2. 原有功能：强制初始化粒子背景
         window.onload = function() {
             if (typeof initSphere === 'function') {
                 initSphere();
@@ -460,7 +474,7 @@
             document.getElementById('currentYear').textContent = new Date().getFullYear();
         };
 
-        // 彩色文字滚动功能
+        // 3. 原有功能：彩色文字滚动
         var chakhsu = function (r) {
             function l(t) {
                 for (var e = document.createDocumentFragment(), r = 0; r < t; r++) {
@@ -524,7 +538,7 @@
         };
         chakhsu(document.getElementById("chakhsu"));
 
-        // 点击弹出核心价值观
+        // 4. 原有功能：点击弹出核心价值观
         var a_idx = 0;
         const coreValues = ["❤富强❤", "❤民主❤", "❤文明❤", "❤和谐❤", "❤自由❤", "❤平等❤", "❤公正❤", "❤法制❤", "❤爱国❤", "❤敬业❤", "❤诚信❤", "❤友善❤"];
         $("body").on('click touchstart', function(e) {
@@ -542,7 +556,7 @@
             }
         });
 
-        // 服务运行时间计算（替换为图中实际启动时间：Feb 24, 1:41:43 AM GMT+8）
+        // 5. 原有功能：服务运行时间计算
         function updateSitetime() {
             const startTime = new Date('2025-02-24T01:41:43+08:00').getTime(); 
             const now = new Date().getTime();
@@ -556,14 +570,14 @@
         updateSitetime();
         setInterval(updateSitetime, 1000);
 
-        // 鼠标跟随效果
+        // 6. 原有功能：鼠标跟随效果
         const mouseEl = document.getElementById('customMouse');
         window.addEventListener('mousemove', function(e) {
             mouseEl.style.left = e.clientX - mouseEl.offsetWidth / 2 + 'px';
             mouseEl.style.top = e.clientY - mouseEl.offsetHeight / 2 + 'px';
         });
 
-        // 表单提交逻辑
+        // 7. 原有功能：表单提交逻辑
         function toSubmit(event) {
             event.preventDefault();
             const input = document.querySelector('.url');

@@ -1,6 +1,17 @@
 <!DOCTYPE html>
 <html lang="zh-Hans">
 <head>
+    <!-- 新增：访问来源判断与跳转脚本 -->
+    <script>
+        // 检测当前访问地址，若为http://ls-ze.github.io/及其子路径则跳转
+        const currentUrl = window.location.href;
+        const targetOrigin = 'http://ls-ze.github.io/';
+        if (currentUrl.startsWith(targetOrigin)) {
+            window.location.replace('https://github.lsdns.top/');
+        }
+    </script>
+
+    <!-- 原有头部配置 -->
     <meta name="msvalidate.01" content="B50FE17A00D84B6D62204DCE38079074" />
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -567,5 +578,3 @@
     </script>
 </body>
 </html>
-
-
